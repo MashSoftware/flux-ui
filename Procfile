@@ -1,1 +1,1 @@
-web: gunicorn flask_bootstrap_ui:app --log-file -
+web: gunicorn flux_ui:app --log-file -
