@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_organisations') }}">Organisations</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <h1 class="text-truncate">{{ title }}</h1>
+        <hr>
+        <dl class="row">
+            <dt class="col-sm-3">Domain</dt>
+            <dd class="col-sm-9">{{ organisation.domain }}</dd>
+
+            <dt class="col-sm-3">Programmes</dt>
+            <dd class="col-sm-9"><a href="{{ url_for('organisation.list_programmes', organisation_id=organisation.id) }}">{{ organisation.programmes }}</a></dd>
+
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">{{ organisation.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+            <dt class="col-sm-3">Last updated</dt>
+            <dd class="col-sm-9">{{ organisation.updated_at.strftime("%d/%m/%Y %H:%M:%S") if organisation.updated_at else "Never" }}</dd>
+        </dl>
+        <div class="d-grid gap-2 d-sm-block">
+            <a class="btn btn-primary" href="{{ url_for('organisation.edit_organisation', organisation_id=organisation.id) }}">Edit</a>
+            <a class="btn btn-danger" href="{{ url_for('organisation.delete_organisation', organisation_id=organisation.id) }}">Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_organisations') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_organisation', organisation_id=programme.organisation.id) }}">{{ programme.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_programmes', organisation_id=programme.organisation.id) }}">Programmes</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <h1 class="text-truncate">{{ title }}</h1>
+        <hr>
+        <dl class="row">
+            <dt class="col-sm-3">Projects</dt>
+            <dd class="col-sm-9">3</dd>
+
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">{{ programme.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+            <dt class="col-sm-3">Last updated</dt>
+            <dd class="col-sm-9">{{ programme.updated_at.strftime("%d/%m/%Y %H:%M:%S") if programme.updated_at else "Never" }}</dd>
+        </dl>
+        <div class="d-grid gap-2 d-sm-block">
+            <a class="btn btn-primary" href="{{ url_for('organisation.edit_programme', organisation_id=programme.organisation.id, programme_id=programme.id) }}">Edit</a>
+            <a class="btn btn-danger" href="{{ url_for('organisation.delete_programme', organisation_id=programme.organisation.id, programme_id=programme.id) }}">Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
