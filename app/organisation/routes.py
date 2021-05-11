@@ -33,7 +33,10 @@ def create_organisation():
         new_organisation = flux_api.create_organisation(name=form.name.data, domain=form.domain.data)
         flash(
             "<a href='{}' class='alert-link'>{}</a> has been created.".format(
-                url_for("organisation.view_organisation", organisation_id=new_organisation["id"]),
+                url_for(
+                    "organisation.view_organisation",
+                    organisation_id=new_organisation["id"],
+                ),
                 new_organisation["name"],
             ),
             "success",
@@ -69,7 +72,9 @@ def edit_organisation(organisation_id):
 
     if form.validate_on_submit():
         changed_organisation = flux_api.edit_organisation(
-            organisation_id=organisation_id, name=form.name.data, domain=form.domain.data
+            organisation_id=organisation_id,
+            name=form.name.data,
+            domain=form.domain.data,
         )
         flash(
             "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
@@ -138,10 +143,18 @@ def create_programme(organisation_id):
     organisation = flux_api.get_organisation(organisation_id)
 
     if form.validate_on_submit():
-        new_programme = flux_api.create_programme(organisation_id=organisation_id, name=form.name.data)
+        new_programme = flux_api.create_programme(
+            organisation_id=organisation_id,
+            name=form.name.data,
+            programme_manager=form.programme_manager.data,
+        )
         flash(
             "<a href='{}' class='alert-link'>{}</a> has been created.".format(
-                url_for("organisation.view_programme", organisation_id=organisation_id, programme_id=new_programme["id"]),
+                url_for(
+                    "organisation.view_programme",
+                    organisation_id=organisation_id,
+                    programme_id=new_programme["id"],
+                ),
                 new_programme["name"],
             ),
             "success",
@@ -169,7 +182,10 @@ def view_programme(organisation_id, programme_id):
     )
 
 
-@bp.route("/<uuid:organisation_id>/programme/<uuid:programme_id>/edit", methods=["GET", "POST"])
+@bp.route(
+    "/<uuid:organisation_id>/programme/<uuid:programme_id>/edit",
+    methods=["GET", "POST"],
+)
 def edit_programme(organisation_id, programme_id):
     """Edit a specific Programme in an Organisation."""
     flux_api = FluxAPI()
@@ -178,11 +194,18 @@ def edit_programme(organisation_id, programme_id):
 
     if form.validate_on_submit():
         changed_programme = flux_api.edit_programme(
-            organisation_id=organisation_id, programme_id=programme_id, name=form.name.data
+            organisation_id=organisation_id,
+            programme_id=programme_id,
+            name=form.name.data,
+            programme_manager=form.programme_manager.data,
         )
         flash(
             "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
-                url_for("organisation.view_programme", organisation_id=organisation_id, programme_id=programme_id),
+                url_for(
+                    "organisation.view_programme",
+                    organisation_id=organisation_id,
+                    programme_id=programme_id,
+                ),
                 changed_programme["name"],
             ),
             "success",
@@ -190,6 +213,7 @@ def edit_programme(organisation_id, programme_id):
         return redirect(url_for("organisation.list_programmes", organisation_id=organisation_id))
     elif request.method == "GET":
         form.name.data = programme["name"]
+        form.programme_manager.data = programme["programme_manager"]
 
     return render_template(
         "programme/update_programme.html",
@@ -199,7 +223,10 @@ def edit_programme(organisation_id, programme_id):
     )
 
 
-@bp.route("/<uuid:organisation_id>/programme/<uuid:programme_id>/delete", methods=["GET", "POST"])
+@bp.route(
+    "/<uuid:organisation_id>/programme/<uuid:programme_id>/delete",
+    methods=["GET", "POST"],
+)
 @csrf.exempt
 def delete_programme(organisation_id, programme_id):
     """Delete a specific Programme in an Organisation."""

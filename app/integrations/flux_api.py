@@ -80,7 +80,6 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-
     def get_organisation(self, organisation_id):
         """Get a Organisation with a specific ID."""
         url = "{0}/{1}/organisations/{2}".format(self.url, self.version, organisation_id)
@@ -158,11 +157,11 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def create_programme(self, organisation_id, name):
+    def create_programme(self, organisation_id, name, programme_manager):
         """Create a new Programme in an Organisation."""
         url = "{0}/{1}/organisations/{2}/programmes".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        new_programme = {"name": name}
+        new_programme = {"name": name, "programme_manager": programme_manager}
 
         try:
             response = requests.post(
@@ -209,9 +208,7 @@ class FluxAPI:
                 for programme in programmes:
                     programme["created_at"] = datetime.strptime(programme["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
                     if programme["updated_at"]:
-                        programme["updated_at"] = datetime.strptime(
-                            programme["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z"
-                        )
+                        programme["updated_at"] = datetime.strptime(programme["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
                 return programmes
             elif response.status_code == 204:
                 return None
@@ -245,11 +242,11 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def edit_programme(self, organisation_id, programme_id, name):
+    def edit_programme(self, organisation_id, programme_id, name, programme_manager):
         """Edit a Programme with a specific ID."""
         url = "{0}/{1}/organisations/{2}/programmes/{3}".format(self.url, self.version, organisation_id, programme_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        changed_programme = {"name": name}
+        changed_programme = {"name": name, "programme_manager": programme_manager}
 
         try:
             response = requests.put(
