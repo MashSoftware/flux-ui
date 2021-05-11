@@ -15,6 +15,12 @@
         <hr>
         <p class="lead">Are you sure you want to delete {{ programme.name }}?</p>
         <dl class="row">
+            <dt class="col-sm-3">Programme manager</dt>
+            <dd class="col-sm-9">{{ programme.programme_manager }}</dd>
+            
+            <dt class="col-sm-3">Projects</dt>
+            <dd class="col-sm-9">3</dd>
+
             <dt class="col-sm-3">Created</dt>
             <dd class="col-sm-9">{{ programme.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
 

@@ -19,16 +19,31 @@
                 {{ form.name.label(class="form-label") }}
                 {% if form.errors %}
                     {% if form.name.errors %}
-                        {{ form.name(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="nameHelp") }}
-                        {% for error in form.name.errors %}<div class="invalid-feedback">{{error}}</div>{% endfor %}
+                        {{ form.name(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="nameHelp nameError") }}
+                        {% for error in form.name.errors %}<div class="invalid-feedback" id="nameError">{{error}}</div>{% endfor %}
                     {% else %}
-                        {{ form.name(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="nameHelp") }}
-                        <div class="valid-feedback">Looks good!</div>
+                        {{ form.name(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="nameHelp nameValid") }}
+                        <div class="valid-feedback" id="nameValid">Looks good!</div>
                     {% endif %}
                 {% else %}
                     {{ form.name(class="form-control", type="text", spellcheck="true", aria_describedby="nameHelp") }}
                 {% endif %}
                 <div id="nameHelp" class="form-text">{{ form.name.description }}</div>
+            </div>
+            <div class="mb-3">
+                {{ form.programme_manager.label(class="form-label") }}
+                {% if form.errors %}
+                    {% if form.programme_manager.errors %}
+                        {{ form.programme_manager(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="programmeManagerHelp programmeManagerError") }}
+                        {% for error in form.programme_manager.errors %}<div class="invalid-feedback" id="programmeManagerError">{{error}}</div>{% endfor %}
+                    {% else %}
+                        {{ form.programme_manager(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="programmeManagerHelp programmeManagerValid") }}
+                        <div class="valid-feedback" id="programmeManagerValid">Looks good!</div>
+                    {% endif %}
+                {% else %}
+                    {{ form.programme_manager(class="form-control", type="text", spellcheck="true", aria_describedby="programmeManagerHelp") }}
+                {% endif %}
+                <div id="programmeManagerHelp" class="form-text">{{ form.programme_manager.description }}</div>
             </div>
             <div class="d-grid gap-2 d-sm-block">
                 {{ form.save(class="btn btn-primary btn-lg") }}
