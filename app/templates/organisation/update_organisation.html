@@ -18,11 +18,11 @@
                 {{ form.name.label(class="form-label") }}
                 {% if form.errors %}
                     {% if form.name.errors %}
-                        {{ form.name(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="nameHelp") }}
-                        {% for error in form.name.errors %}<div class="invalid-feedback">{{error}}</div>{% endfor %}
+                        {{ form.name(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="nameHelp nameError") }}
+                        {% for error in form.name.errors %}<div id="nameError" class="invalid-feedback">{{error}}</div>{% endfor %}
                     {% else %}
-                        {{ form.name(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="nameHelp") }}
-                        <div class="valid-feedback">Looks good!</div>
+                        {{ form.name(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="nameHelp nameValid") }}
+                        <div id="nameValid" class="valid-feedback">Looks good!</div>
                     {% endif %}
                 {% else %}
                     {{ form.name(class="form-control", type="text", spellcheck="true", aria_describedby="nameHelp") }}
@@ -33,11 +33,11 @@
                 {{ form.domain.label(class="form-label") }}
                 {% if form.errors %}
                     {% if form.domain.errors %}
-                        {{ form.domain(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="domainHelp") }}
-                        {% for error in form.domain.errors %}<div class="invalid-feedback">{{error}}</div>{% endfor %}
+                        {{ form.domain(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="domainHelp domainError") }}
+                        {% for error in form.domain.errors %}<div id="domainError" class="invalid-feedback">{{error}}</div>{% endfor %}
                     {% else %}
-                        {{ form.domain(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="domainHelp") }}
-                        <div class="valid-feedback">Looks good!</div>
+                        {{ form.domain(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="domainHelp domainValid") }}
+                        <div id="domainValid" class="valid-feedback">Looks good!</div>
                     {% endif %}
                 {% else %}
                     {{ form.domain(class="form-control", type="text", spellcheck="true", aria_describedby="domainHelp") }}
