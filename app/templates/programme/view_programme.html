@@ -27,8 +27,8 @@
             <dd class="col-sm-9">{{ programme.updated_at.strftime("%d/%m/%Y %H:%M:%S") if programme.updated_at else "Never" }}</dd>
         </dl>
         <div class="d-grid gap-2 d-sm-block">
-            <a class="btn btn-primary" href="{{ url_for('organisation.edit_programme', organisation_id=programme.organisation.id, programme_id=programme.id) }}">Edit</a>
-            <a class="btn btn-danger" href="{{ url_for('organisation.delete_programme', organisation_id=programme.organisation.id, programme_id=programme.id) }}">Delete</a>
+            <a class="btn btn-primary" href="{{ url_for('organisation.edit_programme', organisation_id=programme.organisation.id, programme_id=programme.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>
+            <a class="btn btn-danger" href="{{ url_for('organisation.delete_programme', organisation_id=programme.organisation.id, programme_id=programme.id) }}"><i class="bi bi-trash"></i> Delete</a>
         </div>
     </div>
 </div>

@@ -25,8 +25,8 @@
             <dd class="col-sm-9">{{ organisation.updated_at.strftime("%d/%m/%Y %H:%M:%S") if organisation.updated_at else "Never" }}</dd>
         </dl>
         <div class="d-grid gap-2 d-sm-block">
-            <a class="btn btn-primary" href="{{ url_for('organisation.edit_organisation', organisation_id=organisation.id) }}">Edit</a>
-            <a class="btn btn-danger" href="{{ url_for('organisation.delete_organisation', organisation_id=organisation.id) }}">Delete</a>
+            <a class="btn btn-primary" href="{{ url_for('organisation.edit_organisation', organisation_id=organisation.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>
+            <a class="btn btn-danger" href="{{ url_for('organisation.delete_organisation', organisation_id=organisation.id) }}"><i class="bi bi-trash"></i> Delete</a>
         </div>
     </div>
 </div>
