@@ -40,8 +40,6 @@
                             <th scope="col">Name</th>
                             <th scope="col">Programme manager</th>
                             <th scope="col">Projects</th>
-                            <th scope="col">Created</th>
-                            <th scope="col">Last updated</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -49,10 +47,8 @@
                         {% for programme in programmes %}
                             <tr>
                                 <th scope="row"><a href="{{ url_for('organisation.view_programme', organisation_id=organisation.id, programme_id=programme.id) }}">{{ programme.name }}</a></th>
-                                <td>{{ programme.programme_manager }}</td>
-                                <td>3</td>
-                                <td>{{ programme.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</td>
-                                <td>{{ programme.updated_at.strftime("%d/%m/%Y %H:%M:%S") if programme.updated_at else "Never" }}</td>
+                                <td><i class="bi bi-person"></i><a href="#">{{ programme.programme_manager }}</a></td>
+                                <td><a href="#">3</a></td>
                                 <td><a href="{{ url_for('organisation.edit_programme', organisation_id=organisation.id, programme_id=programme.id) }}">Edit</a> | <a href="{{ url_for('organisation.delete_programme', organisation_id=organisation.id, programme_id=programme.id) }}">Delete</a></td>
                             </tr>
                         {% endfor %}
