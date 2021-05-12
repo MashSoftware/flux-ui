@@ -7,6 +7,7 @@
                 <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_organisations') }}">Organisations</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_organisation', organisation_id=programme.organisation.id) }}">{{ programme.organisation.name }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_programmes', organisation_id=programme.organisation.id) }}">Programmes</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_programme', organisation_id=programme.organisation.id, programme_id=programme.id) }}">{{ programme.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Delete</li>
             </ol>
         </nav>
