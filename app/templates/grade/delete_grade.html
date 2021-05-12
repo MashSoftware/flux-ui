@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_organisations') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_organisation', organisation_id=grade.organisation.id) }}">{{ grade.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_programmes', organisation_id=grade.organisation.id) }}">Grades</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_grade', organisation_id=grade.organisation.id, grade_id=grade.id) }}">{{ grade.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Delete</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <h1>{{title}}</h1>
+        <hr>
+        <p class="lead">Are you sure you want to delete {{ grade.name }}?</p>
+        <dl class="row">
+            <dt class="col-sm-3">Jobs</dt>
+            <dd class="col-sm-9"><a href="#">5</a></dd>
+
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">{{ grade.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+            <dt class="col-sm-3">Last updated</dt>
+            <dd class="col-sm-9">{{ grade.updated_at.strftime("%d/%m/%Y %H:%M:%S") if grade.updated_at else "Never" }}</dd>
+        </dl>
+        <form action="" method="post" novalidate>
+            <div class="d-grid gap-2 d-sm-block">
+                <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i> Yes, delete {{ grade.name }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

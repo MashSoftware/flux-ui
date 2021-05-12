@@ -1,7 +1,7 @@
 from app import csrf
 from app.integrations.flux_api import FluxAPI
 from app.organisation import bp
-from app.organisation.forms import OrganisationForm, ProgrammeForm
+from app.organisation.forms import GradeForm, OrganisationForm, ProgrammeForm
 from flask import flash, redirect, render_template, request, url_for
 
 
@@ -243,3 +243,123 @@ def delete_programme(organisation_id, programme_id):
         flux_api.delete_programme(organisation_id, programme_id)
         flash("{} has been deleted.".format(programme["name"]), "success")
         return redirect(url_for("organisation.list_programmes", organisation_id=organisation_id))
+
+
+@bp.route("/<uuid:organisation_id>/grade", methods=["GET", "POST"])
+def list_grades(organisation_id):
+    """Get a list of Grades."""
+    flux_api = FluxAPI()
+    name_query = request.args.get("name", type=str)
+    organisation = flux_api.get_organisation(organisation_id)
+
+    if name_query:
+        grades = flux_api.list_grades(organisation_id=organisation_id, name=name_query)
+    else:
+        grades = flux_api.list_grades(organisation_id=organisation_id)
+
+    return render_template(
+        "grade/list_grades.html",
+        title="Grades",
+        organisation=organisation,
+        grades=grades,
+    )
+
+
+@bp.route("/<uuid:organisation_id>/grade/new", methods=["GET", "POST"])
+def create_grade(organisation_id):
+    """Create a new Grade."""
+    flux_api = FluxAPI()
+    form = GradeForm()
+    organisation = flux_api.get_organisation(organisation_id)
+
+    if form.validate_on_submit():
+        new_grade = flux_api.create_grade(organisation_id=organisation_id, name=form.name.data)
+        flash(
+            "<a href='{}' class='alert-link'>{}</a> has been created.".format(
+                url_for(
+                    "organisation.view_grade",
+                    organisation_id=organisation_id,
+                    grade_id=new_grade["id"],
+                ),
+                new_grade["name"],
+            ),
+            "success",
+        )
+        return redirect(url_for("organisation.list_grades", organisation_id=organisation_id))
+
+    return render_template(
+        "grade/create_grade.html",
+        title="Create a new grade",
+        organisation=organisation,
+        form=form,
+    )
+
+
+@bp.route("/<uuid:organisation_id>/grade/<uuid:grade_id>", methods=["GET"])
+def view_grade(organisation_id, grade_id):
+    """View a specific Grade in an Organisation."""
+    flux_api = FluxAPI()
+    grade = flux_api.get_grade(organisation_id, grade_id)
+
+    return render_template(
+        "grade/view_grade.html",
+        title=grade["name"],
+        grade=grade,
+    )
+
+
+@bp.route(
+    "/<uuid:organisation_id>/grade/<uuid:grade_id>/edit",
+    methods=["GET", "POST"],
+)
+def edit_grade(organisation_id, grade_id):
+    """Edit a specific Grade in an Organisation."""
+    flux_api = FluxAPI()
+    grade = flux_api.get_grade(organisation_id, grade_id)
+    form = GradeForm()
+
+    if form.validate_on_submit():
+        changed_grade = flux_api.edit_grade(organisation_id=organisation_id, grade_id=grade_id, name=form.name.data)
+        flash(
+            "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
+                url_for(
+                    "organisation.view_grade",
+                    organisation_id=organisation_id,
+                    grade_id=grade_id,
+                ),
+                changed_grade["name"],
+            ),
+            "success",
+        )
+        return redirect(url_for("organisation.list_grades", organisation_id=organisation_id))
+    elif request.method == "GET":
+        form.name.data = grade["name"]
+
+    return render_template(
+        "grade/update_grade.html",
+        title="Edit {}".format(grade["name"]),
+        form=form,
+        grade=grade,
+    )
+
+
+@bp.route(
+    "/<uuid:organisation_id>/grade/<uuid:grade_id>/delete",
+    methods=["GET", "POST"],
+)
+@csrf.exempt
+def delete_grade(organisation_id, grade_id):
+    """Delete a specific Grade in an Organisation."""
+    flux_api = FluxAPI()
+    grade = flux_api.get_grade(organisation_id, grade_id)
+
+    if request.method == "GET":
+        return render_template(
+            "grade/delete_grade.html",
+            title="Delete {}".format(grade["name"]),
+            grade=grade,
+        )
+    elif request.method == "POST":
+        flux_api.delete_grade(organisation_id, grade_id)
+        flash("{} has been deleted.".format(grade["name"]), "success")
+        return redirect(url_for("organisation.list_grades", organisation_id=organisation_id))
