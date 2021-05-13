@@ -47,7 +47,7 @@
                     <tr>
                         <th scope="row"><a href="{{ url_for('organisation.view_grade', organisation_id=organisation.id, grade_id=grade.id) }}">{{ grade.name }}</a></th>
                         <td><a href="#">5</a></td>
-                        <td><a href="{{ url_for('organisation.edit_grade', organisation_id=organisation.id, grade_id=grade.id) }}">Edit</a> | <a href="{{ url_for('organisation.delete_grade', organisation_id=organisation.id, grade_id=grade.id) }}">Delete</a></td>
+                        <td><a href="{{ url_for('organisation.edit_grade', organisation_id=organisation.id, grade_id=grade.id) }}">Edit</a> | <a href="{{ url_for('organisation.delete_grade', organisation_id=organisation.id, grade_id=grade.id) }}" class="link-danger">Delete</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
