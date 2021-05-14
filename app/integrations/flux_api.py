@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 import requests
 from flask import current_app
 from werkzeug.exceptions import (
+    Conflict,
     InternalServerError,
     NotFound,
     RequestTimeout,
@@ -42,6 +43,8 @@ class FluxAPI:
                 if organisation["updated_at"]:
                     organisation["updated_at"] = datetime.strptime(organisation["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
                 return organisation
+            elif response.status_code == 409:
+                raise Conflict
             elif response.status_code == 429:
                 raise TooManyRequests
             else:
