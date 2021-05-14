@@ -67,7 +67,6 @@ def view_organisation(organisation_id):
 def edit_organisation(organisation_id):
     """Edit a Organisation with a specific ID."""
     flux_api = FluxAPI()
-    organisation = flux_api.get_organisation(organisation_id)
     form = OrganisationForm()
 
     if form.validate_on_submit():
@@ -85,6 +84,7 @@ def edit_organisation(organisation_id):
         )
         return redirect(url_for("organisation.list_organisations"))
     elif request.method == "GET":
+        organisation = flux_api.get_organisation(organisation_id)
         form.name.data = organisation["name"]
         form.domain.data = organisation["domain"]
 
@@ -189,7 +189,6 @@ def view_programme(organisation_id, programme_id):
 def edit_programme(organisation_id, programme_id):
     """Edit a specific Programme in an Organisation."""
     flux_api = FluxAPI()
-    programme = flux_api.get_programme(organisation_id, programme_id)
     form = ProgrammeForm()
 
     if form.validate_on_submit():
@@ -212,6 +211,7 @@ def edit_programme(organisation_id, programme_id):
         )
         return redirect(url_for("organisation.list_programmes", organisation_id=organisation_id))
     elif request.method == "GET":
+        programme = flux_api.get_programme(organisation_id, programme_id)
         form.name.data = programme["name"]
         form.programme_manager.data = programme["programme_manager"]
 
@@ -315,7 +315,6 @@ def view_grade(organisation_id, grade_id):
 def edit_grade(organisation_id, grade_id):
     """Edit a specific Grade in an Organisation."""
     flux_api = FluxAPI()
-    grade = flux_api.get_grade(organisation_id, grade_id)
     form = GradeForm()
 
     if form.validate_on_submit():
@@ -333,6 +332,7 @@ def edit_grade(organisation_id, grade_id):
         )
         return redirect(url_for("organisation.list_grades", organisation_id=organisation_id))
     elif request.method == "GET":
+        grade = flux_api.get_grade(organisation_id, grade_id)
         form.name.data = grade["name"]
 
     return render_template(
