@@ -1,5 +1,5 @@
 from app import csrf
-from app.integrations.flux_api import FluxAPI
+from app.integrations.flux_api import Organisation, Grade, Programme
 from app.organisation import bp
 from app.organisation.forms import GradeForm, OrganisationForm, ProgrammeForm
 from flask import flash, redirect, render_template, request, url_for
@@ -8,13 +8,12 @@ from flask import flash, redirect, render_template, request, url_for
 @bp.route("/", methods=["GET", "POST"])
 def list_organisations():
     """Get a list of Organisations."""
-    flux_api = FluxAPI()
     name_query = request.args.get("name", type=str)
 
     if name_query:
-        organisations = flux_api.list_organisations(name=name_query)
+        organisations = Organisation().list(name=name_query)
     else:
-        organisations = flux_api.list_organisations()
+        organisations = Organisation().list()
 
     return render_template(
         "organisation/list_organisations.html",
@@ -26,11 +25,10 @@ def list_organisations():
 @bp.route("/new", methods=["GET", "POST"])
 def create_organisation():
     """Create a new Organisation."""
-    flux_api = FluxAPI()
     form = OrganisationForm()
 
     if form.validate_on_submit():
-        new_organisation = flux_api.create_organisation(name=form.name.data, domain=form.domain.data)
+        new_organisation = Organisation().create(name=form.name.data, domain=form.domain.data)
         flash(
             "<a href='{}' class='alert-link'>{}</a> has been created.".format(
                 url_for(
@@ -53,8 +51,7 @@ def create_organisation():
 @bp.route("/<uuid:organisation_id>", methods=["GET"])
 def view_organisation(organisation_id):
     """View a Organisation with a specific ID."""
-    flux_api = FluxAPI()
-    organisation = flux_api.get_organisation(organisation_id)
+    organisation = Organisation().get(organisation_id)
 
     return render_template(
         "organisation/view_organisation.html",
@@ -66,11 +63,10 @@ def view_organisation(organisation_id):
 @bp.route("/<uuid:organisation_id>/edit", methods=["GET", "POST"])
 def edit_organisation(organisation_id):
     """Edit a Organisation with a specific ID."""
-    flux_api = FluxAPI()
     form = OrganisationForm()
 
     if form.validate_on_submit():
-        changed_organisation = flux_api.edit_organisation(
+        changed_organisation = Organisation().edit(
             organisation_id=organisation_id,
             name=form.name.data,
             domain=form.domain.data,
@@ -84,7 +80,7 @@ def edit_organisation(organisation_id):
         )
         return redirect(url_for("organisation.list_organisations"))
     elif request.method == "GET":
-        organisation = flux_api.get_organisation(organisation_id)
+        organisation = Organisation().get(organisation_id)
         form.name.data = organisation["name"]
         form.domain.data = organisation["domain"]
 
@@ -100,8 +96,7 @@ def edit_organisation(organisation_id):
 @csrf.exempt
 def delete_organisation(organisation_id):
     """Delete a Organisation with a specific ID."""
-    flux_api = FluxAPI()
-    organisation = flux_api.get_organisation(organisation_id)
+    organisation = Organisation().get(organisation_id)
 
     if request.method == "GET":
         return render_template(
@@ -110,7 +105,7 @@ def delete_organisation(organisation_id):
             organisation=organisation,
         )
     elif request.method == "POST":
-        flux_api.delete_organisation(organisation_id)
+        Organisation().delete(organisation_id)
         flash("{} has been deleted.".format(organisation["name"]), "success")
         return redirect(url_for("organisation.list_organisations"))
 
@@ -118,14 +113,13 @@ def delete_organisation(organisation_id):
 @bp.route("/<uuid:organisation_id>/programme", methods=["GET", "POST"])
 def list_programmes(organisation_id):
     """Get a list of Programmes."""
-    flux_api = FluxAPI()
     name_query = request.args.get("name", type=str)
-    organisation = flux_api.get_organisation(organisation_id)
+    organisation = Organisation().get(organisation_id)
 
     if name_query:
-        programmes = flux_api.list_programmes(organisation_id=organisation_id, name=name_query)
+        programmes = Programme().list(organisation_id=organisation_id, name=name_query)
     else:
-        programmes = flux_api.list_programmes(organisation_id=organisation_id)
+        programmes = Programme().list(organisation_id=organisation_id)
 
     return render_template(
         "programme/list_programmes.html",
@@ -138,12 +132,11 @@ def list_programmes(organisation_id):
 @bp.route("/<uuid:organisation_id>/programme/new", methods=["GET", "POST"])
 def create_programme(organisation_id):
     """Create a new Programme."""
-    flux_api = FluxAPI()
     form = ProgrammeForm()
-    organisation = flux_api.get_organisation(organisation_id)
+    organisation = Organisation().get(organisation_id)
 
     if form.validate_on_submit():
-        new_programme = flux_api.create_programme(
+        new_programme = Programme().create(
             organisation_id=organisation_id,
             name=form.name.data,
             programme_manager=form.programme_manager.data,
@@ -172,8 +165,7 @@ def create_programme(organisation_id):
 @bp.route("/<uuid:organisation_id>/programme/<uuid:programme_id>", methods=["GET"])
 def view_programme(organisation_id, programme_id):
     """View a specific Programme in an Organisation."""
-    flux_api = FluxAPI()
-    programme = flux_api.get_programme(organisation_id, programme_id)
+    programme = Programme().get(organisation_id, programme_id)
 
     return render_template(
         "programme/view_programme.html",
@@ -188,11 +180,10 @@ def view_programme(organisation_id, programme_id):
 )
 def edit_programme(organisation_id, programme_id):
     """Edit a specific Programme in an Organisation."""
-    flux_api = FluxAPI()
     form = ProgrammeForm()
 
     if form.validate_on_submit():
-        changed_programme = flux_api.edit_programme(
+        changed_programme = Programme().edit(
             organisation_id=organisation_id,
             programme_id=programme_id,
             name=form.name.data,
@@ -211,7 +202,7 @@ def edit_programme(organisation_id, programme_id):
         )
         return redirect(url_for("organisation.list_programmes", organisation_id=organisation_id))
     elif request.method == "GET":
-        programme = flux_api.get_programme(organisation_id, programme_id)
+        programme = Programme().get(organisation_id, programme_id)
         form.name.data = programme["name"]
         form.programme_manager.data = programme["programme_manager"]
 
@@ -230,8 +221,7 @@ def edit_programme(organisation_id, programme_id):
 @csrf.exempt
 def delete_programme(organisation_id, programme_id):
     """Delete a specific Programme in an Organisation."""
-    flux_api = FluxAPI()
-    programme = flux_api.get_programme(organisation_id, programme_id)
+    programme = Programme().get(organisation_id, programme_id)
 
     if request.method == "GET":
         return render_template(
@@ -240,7 +230,7 @@ def delete_programme(organisation_id, programme_id):
             programme=programme,
         )
     elif request.method == "POST":
-        flux_api.delete_programme(organisation_id, programme_id)
+        Programme().delete(organisation_id, programme_id)
         flash("{} has been deleted.".format(programme["name"]), "success")
         return redirect(url_for("organisation.list_programmes", organisation_id=organisation_id))
 
@@ -248,14 +238,13 @@ def delete_programme(organisation_id, programme_id):
 @bp.route("/<uuid:organisation_id>/grade", methods=["GET", "POST"])
 def list_grades(organisation_id):
     """Get a list of Grades."""
-    flux_api = FluxAPI()
     name_query = request.args.get("name", type=str)
-    organisation = flux_api.get_organisation(organisation_id)
+    organisation = Organisation().get(organisation_id)
 
     if name_query:
-        grades = flux_api.list_grades(organisation_id=organisation_id, name=name_query)
+        grades = Grade().list(organisation_id=organisation_id, name=name_query)
     else:
-        grades = flux_api.list_grades(organisation_id=organisation_id)
+        grades = Grade().list(organisation_id=organisation_id)
 
     return render_template(
         "grade/list_grades.html",
@@ -268,12 +257,11 @@ def list_grades(organisation_id):
 @bp.route("/<uuid:organisation_id>/grade/new", methods=["GET", "POST"])
 def create_grade(organisation_id):
     """Create a new Grade."""
-    flux_api = FluxAPI()
     form = GradeForm()
-    organisation = flux_api.get_organisation(organisation_id)
+    organisation = Organisation().get(organisation_id)
 
     if form.validate_on_submit():
-        new_grade = flux_api.create_grade(organisation_id=organisation_id, name=form.name.data)
+        new_grade = Grade().create(organisation_id=organisation_id, name=form.name.data)
         flash(
             "<a href='{}' class='alert-link'>{}</a> has been created.".format(
                 url_for(
@@ -298,8 +286,7 @@ def create_grade(organisation_id):
 @bp.route("/<uuid:organisation_id>/grade/<uuid:grade_id>", methods=["GET"])
 def view_grade(organisation_id, grade_id):
     """View a specific Grade in an Organisation."""
-    flux_api = FluxAPI()
-    grade = flux_api.get_grade(organisation_id, grade_id)
+    grade = Grade().get(organisation_id, grade_id)
 
     return render_template(
         "grade/view_grade.html",
@@ -314,11 +301,10 @@ def view_grade(organisation_id, grade_id):
 )
 def edit_grade(organisation_id, grade_id):
     """Edit a specific Grade in an Organisation."""
-    flux_api = FluxAPI()
     form = GradeForm()
 
     if form.validate_on_submit():
-        changed_grade = flux_api.edit_grade(organisation_id=organisation_id, grade_id=grade_id, name=form.name.data)
+        changed_grade = Grade().edit(organisation_id=organisation_id, grade_id=grade_id, name=form.name.data)
         flash(
             "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
                 url_for(
@@ -332,7 +318,7 @@ def edit_grade(organisation_id, grade_id):
         )
         return redirect(url_for("organisation.list_grades", organisation_id=organisation_id))
     elif request.method == "GET":
-        grade = flux_api.get_grade(organisation_id, grade_id)
+        grade = Grade().get(organisation_id, grade_id)
         form.name.data = grade["name"]
 
     return render_template(
@@ -350,8 +336,7 @@ def edit_grade(organisation_id, grade_id):
 @csrf.exempt
 def delete_grade(organisation_id, grade_id):
     """Delete a specific Grade in an Organisation."""
-    flux_api = FluxAPI()
-    grade = flux_api.get_grade(organisation_id, grade_id)
+    grade = Grade().get(organisation_id, grade_id)
 
     if request.method == "GET":
         return render_template(
@@ -360,6 +345,6 @@ def delete_grade(organisation_id, grade_id):
             grade=grade,
         )
     elif request.method == "POST":
-        flux_api.delete_grade(organisation_id, grade_id)
+        Grade().delete(organisation_id, grade_id)
         flash("{} has been deleted.".format(grade["name"]), "success")
         return redirect(url_for("organisation.list_grades", organisation_id=organisation_id))

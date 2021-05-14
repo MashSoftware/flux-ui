@@ -19,7 +19,9 @@ class FluxAPI:
         self.version = current_app.config["FLUX_API_VERSION"]
         self.timeout = current_app.config["TIMEOUT"]
 
-    def create_organisation(self, name, domain):
+
+class Organisation(FluxAPI):
+    def create(self, name, domain):
         """Create a new Organisation."""
         url = "{0}/{1}/organisations".format(self.url, self.version)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -50,7 +52,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def list_organisations(self, **kwargs):
+    def list(self, **kwargs):
         """Get a list of Organisations."""
         if kwargs:
             args = {"name": kwargs.get("name", "")}
@@ -83,7 +85,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def get_organisation(self, organisation_id):
+    def get(self, organisation_id):
         """Get a Organisation with a specific ID."""
         url = "{0}/{1}/organisations/{2}".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json"}
@@ -108,7 +110,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def edit_organisation(self, organisation_id, name, domain):
+    def edit(self, organisation_id, name, domain):
         """Edit a Organisation with a specific ID."""
         url = "{0}/{1}/organisations/{2}".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -139,7 +141,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def delete_organisation(self, organisation_id):
+    def delete(self, organisation_id):
         """Delete a Organisation with a specific ID."""
         url = "{0}/{1}/organisations/{2}".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json"}
@@ -160,7 +162,9 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def create_programme(self, organisation_id, name, programme_manager):
+
+class Programme(FluxAPI):
+    def create(self, organisation_id, name, programme_manager):
         """Create a new Programme in an Organisation."""
         url = "{0}/{1}/organisations/{2}/programmes".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -189,7 +193,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def list_programmes(self, organisation_id, **kwargs):
+    def list(self, organisation_id, **kwargs):
         """Get a list of Programmes in an Organisation."""
         if kwargs:
             args = {"name": kwargs.get("name", "")}
@@ -220,7 +224,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def get_programme(self, organisation_id, programme_id):
+    def get(self, organisation_id, programme_id):
         """Get a specific Programme in an Organisation."""
         url = "{0}/{1}/organisations/{2}/programmes/{3}".format(self.url, self.version, organisation_id, programme_id)
         headers = {"Accept": "application/json"}
@@ -245,7 +249,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def edit_programme(self, organisation_id, programme_id, name, programme_manager):
+    def edit(self, organisation_id, programme_id, name, programme_manager):
         """Edit a Programme with a specific ID."""
         url = "{0}/{1}/organisations/{2}/programmes/{3}".format(self.url, self.version, organisation_id, programme_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -276,7 +280,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def delete_programme(self, organisation_id, programme_id):
+    def delete(self, organisation_id, programme_id):
         """Delete a Organisation with a specific ID."""
         url = "{0}/{1}/organisations/{2}/programmes/{3}".format(self.url, self.version, organisation_id, programme_id)
         headers = {"Accept": "application/json"}
@@ -297,7 +301,9 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def create_grade(self, organisation_id, name):
+
+class Grade(FluxAPI):
+    def create(self, organisation_id, name):
         """Create a new Grade in an Organisation."""
         url = "{0}/{1}/organisations/{2}/grades".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -326,7 +332,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def list_grades(self, organisation_id, **kwargs):
+    def list(self, organisation_id, **kwargs):
         """Get a list of Grades in an Organisation."""
         if kwargs:
             args = {"name": kwargs.get("name", "")}
@@ -357,7 +363,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def get_grade(self, organisation_id, grade_id):
+    def get(self, organisation_id, grade_id):
         """Get a specific Grade in an Organisation."""
         url = "{0}/{1}/organisations/{2}/grades/{3}".format(self.url, self.version, organisation_id, grade_id)
         headers = {"Accept": "application/json"}
@@ -382,7 +388,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def edit_grade(self, organisation_id, grade_id, name):
+    def edit(self, organisation_id, grade_id, name):
         """Edit a Grade with a specific ID."""
         url = "{0}/{1}/organisations/{2}/grades/{3}".format(self.url, self.version, organisation_id, grade_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -413,7 +419,7 @@ class FluxAPI:
             else:
                 raise InternalServerError
 
-    def delete_grade(self, organisation_id, grade_id):
+    def delete(self, organisation_id, grade_id):
         """Delete a Organisation with a specific ID."""
         url = "{0}/{1}/organisations/{2}/grades/{3}".format(self.url, self.version, organisation_id, grade_id)
         headers = {"Accept": "application/json"}
