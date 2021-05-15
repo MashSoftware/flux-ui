@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_organisations') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_organisation', organisation_id=practice.organisation.id) }}">{{ practice.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_practices', organisation_id=practice.organisation.id) }}">Practices</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_practice', organisation_id=practice.organisation.id, practice_id=practice.id) }}">{{ practice.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Delete</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <h1>{{title}}</h1>
+        <hr>
+        <p class="lead">Are you sure you want to delete {{ practice.name }}?</p>
+        <dl class="row">
+            <dt class="col-sm-3">Head of practice</dt>
+            <dd class="col-sm-9">{{ practice.head }}</dd>
+            
+            <dt class="col-sm-3">Roles</dt>
+            <dd class="col-sm-9">{{ practice.roles }}</dd>
+
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">{{ practice.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+            <dt class="col-sm-3">Last updated</dt>
+            <dd class="col-sm-9">{{ practice.updated_at.strftime("%d/%m/%Y %H:%M:%S") if practice.updated_at else "Never" }}</dd>
+        </dl>
+        <form action="" method="post" novalidate>
+            <div class="d-grid gap-2 d-sm-block">
+                <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i> Yes, delete {{ practice.name }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
