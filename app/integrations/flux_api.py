@@ -420,8 +420,298 @@ class Grade(FluxAPI):
                 raise InternalServerError
 
     def delete(self, organisation_id, grade_id):
-        """Delete a Organisation with a specific ID."""
+        """Delete a Grade with a specific ID."""
         url = "{0}/{1}/organisations/{2}/grades/{3}".format(self.url, self.version, organisation_id, grade_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.delete(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 204:
+                return None
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+
+class Practice(FluxAPI):
+    def create(self, organisation_id, name, head):
+        """Create a new Practice in an Organisation."""
+        url = "{0}/{1}/organisations/{2}/practices".format(self.url, self.version, organisation_id)
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        new_practice = {"name": name, "head": head}
+
+        try:
+            response = requests.post(
+                url,
+                data=json.dumps(new_practice),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 201:
+                organisation = json.loads(response.text)
+                organisation["created_at"] = datetime.strptime(organisation["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if organisation["updated_at"]:
+                    organisation["updated_at"] = datetime.strptime(organisation["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return organisation
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def list(self, organisation_id, **kwargs):
+        """Get a list of Practices in an Organisation."""
+        if kwargs:
+            args = {"name": kwargs.get("name", "")}
+            qs = urlencode(args)
+            url = "{0}/{1}/organisations/{2}/practices?{3}".format(self.url, self.version, organisation_id, qs)
+        else:
+            url = "{0}/{1}/organisations/{2}/practices".format(self.url, self.version, organisation_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                practices = json.loads(response.text)
+                for practice in practices:
+                    practice["created_at"] = datetime.strptime(practice["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                    if practice["updated_at"]:
+                        practice["updated_at"] = datetime.strptime(practice["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return practices
+            elif response.status_code == 204:
+                return None
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def get(self, organisation_id, practice_id):
+        """Get a specific Practice in an Organisation."""
+        url = "{0}/{1}/organisations/{2}/practices/{3}".format(self.url, self.version, organisation_id, practice_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                practice = json.loads(response.text)
+                practice["created_at"] = datetime.strptime(practice["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if practice["updated_at"]:
+                    practice["updated_at"] = datetime.strptime(practice["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return practice
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def edit(self, organisation_id, practice_id, name, head):
+        """Edit a Practice with a specific ID."""
+        url = "{0}/{1}/organisations/{2}/practices/{3}".format(self.url, self.version, organisation_id, practice_id)
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        changed_practice = {"name": name, "head": head}
+
+        try:
+            response = requests.put(
+                url,
+                data=json.dumps(changed_practice),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                practice = json.loads(response.text)
+                practice["created_at"] = datetime.strptime(practice["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if practice["updated_at"]:
+                    practice["updated_at"] = datetime.strptime(practice["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return practice
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def delete(self, organisation_id, practice_id):
+        """Delete a Practice with a specific ID."""
+        url = "{0}/{1}/organisations/{2}/practices/{3}".format(self.url, self.version, organisation_id, practice_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.delete(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 204:
+                return None
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+
+class Role(FluxAPI):
+    def create(self, organisation_id, practice_id, name):
+        """Create a new Role in a Practice."""
+        url = "{0}/{1}/organisations/{2}/practices/{3}/roles".format(
+            self.url, self.version, organisation_id, practice_id
+        )
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        new_role = {"name": name}
+
+        try:
+            response = requests.post(
+                url,
+                data=json.dumps(new_role),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 201:
+                organisation = json.loads(response.text)
+                organisation["created_at"] = datetime.strptime(organisation["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if organisation["updated_at"]:
+                    organisation["updated_at"] = datetime.strptime(organisation["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return organisation
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def list(self, organisation_id, practice_id, **kwargs):
+        """Get a list of Roles in an Practice."""
+        if kwargs:
+            args = {"name": kwargs.get("name", "")}
+            qs = urlencode(args)
+            url = "{0}/{1}/organisations/{2}/practices/{3}/roles?{4}".format(
+                self.url, self.version, organisation_id, practice_id, qs
+            )
+        else:
+            url = "{0}/{1}/organisations/{2}/practices/{3}/roles".format(
+                self.url, self.version, organisation_id, practice_id
+            )
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                roles = json.loads(response.text)
+                for role in roles:
+                    role["created_at"] = datetime.strptime(role["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                    if role["updated_at"]:
+                        role["updated_at"] = datetime.strptime(role["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return roles
+            elif response.status_code == 204:
+                return None
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def get(self, organisation_id, practice_id, role_id):
+        """Get a specific Role in an Practice."""
+        url = "{0}/{1}/organisations/{2}/practices/{3}/roles/{4}".format(
+            self.url, self.version, organisation_id, practice_id, role_id
+        )
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                role = json.loads(response.text)
+                role["created_at"] = datetime.strptime(role["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if role["updated_at"]:
+                    role["updated_at"] = datetime.strptime(role["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return role
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def edit(self, organisation_id, practice_id, role_id, name):
+        """Edit a Role with a specific ID."""
+        url = "{0}/{1}/organisations/{2}/practices/{3}/roles/{4}".format(
+            self.url, self.version, organisation_id, practice_id, role_id
+        )
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        changed_role = {"name": name}
+
+        try:
+            response = requests.put(
+                url,
+                data=json.dumps(changed_role),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                role = json.loads(response.text)
+                role["created_at"] = datetime.strptime(role["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if role["updated_at"]:
+                    role["updated_at"] = datetime.strptime(role["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return role
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def delete(self, organisation_id, practice_id, role_id):
+        """Delete a Role with a specific ID."""
+        url = "{0}/{1}/organisations/{2}/practices/{3}/roles/{4}".format(
+            self.url, self.version, organisation_id, practice_id, role_id
+        )
         headers = {"Accept": "application/json"}
 
         try:

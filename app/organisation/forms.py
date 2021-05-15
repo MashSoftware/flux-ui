@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField
+from wtforms.fields import SelectField, StringField
 from wtforms.validators import InputRequired
 
 
@@ -37,3 +37,26 @@ class GradeForm(FlaskForm):
         validators=[InputRequired(message="Enter a name")],
         description="The name of the grade",
     )
+
+
+class PracticeForm(FlaskForm):
+    name = StringField(
+        "Name",
+        validators=[InputRequired(message="Enter a name")],
+        description="The name of the practice",
+    )
+    head = StringField(
+        "Head of practice",
+        validators=[InputRequired(message="Enter a head of practice")],
+        description="The name of the head of practice",
+    )
+
+
+class RoleForm(FlaskForm):
+    title = StringField(
+        "Title",
+        validators=[InputRequired(message="Enter a title")],
+        description="The role or job title",
+    )
+    grade = SelectField("Grade", validators=[InputRequired(message="Select a grade")])
+    practice = SelectField("Practice", validators=[InputRequired(message="Select a practice")])
