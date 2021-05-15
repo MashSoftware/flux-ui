@@ -34,6 +34,7 @@
                             <th scope="col">Domain</th>
                             <th scope="col">Programmes</th>
                             <th scope="col">Grades</th>
+                            <th scope="col">Practices</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -44,6 +45,7 @@
                                 <td>{{ organisation.domain }}</td>
                                 <td><a href="{{ url_for('organisation.list_programmes', organisation_id=organisation.id) }}">{{ organisation.programmes }}</a></td>
                                 <td><a href="{{ url_for('organisation.list_grades', organisation_id=organisation.id) }}">{{ organisation.grades }}</a></td>
+                                <td><a href="{{ url_for('organisation.list_practices', organisation_id=organisation.id) }}">{{ organisation.practices }}</a></td>
                                 <td><a href="{{ url_for('organisation.edit_organisation', organisation_id=organisation.id) }}">Edit</a> | <a href="{{ url_for('organisation.delete_organisation', organisation_id=organisation.id) }}" class="link-danger">Delete</a></td>
                             </tr>
                         {% endfor %}

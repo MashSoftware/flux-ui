@@ -21,6 +21,9 @@
             <dt class="col-sm-3">Programmes</dt>
             <dd class="col-sm-9"><a href="{{ url_for('organisation.list_programmes', organisation_id=organisation.id) }}">{{ organisation.programmes }}</a></dd>
 
+            <dt class="col-sm-3">Practices</dt>
+            <dd class="col-sm-9"><a href="{{ url_for('organisation.list_practices', organisation_id=organisation.id) }}">{{ organisation.practices }}</a></dd>
+
             <dt class="col-sm-3">Created</dt>
             <dd class="col-sm-9">{{ organisation.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
 
