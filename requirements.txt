@@ -10,7 +10,7 @@ certifi==2020.12.5
     # via requests
 chardet==4.0.0
     # via requests
-click==7.1.2
+click==8.0.0
     # via flask
 cssmin==0.2.0
     # via -r requirements.in
@@ -28,7 +28,7 @@ flask-talisman==0.7.0
     # via -r requirements.in
 flask-wtf==0.14.3
     # via -r requirements.in
-flask==1.1.2
+flask==2.0.0
     # via
     #   -r requirements.in
     #   flask-assets
@@ -41,17 +41,17 @@ idna==2.10
     # via
     #   email-validator
     #   requests
-itsdangerous==1.1.0
+itsdangerous==2.0.0
     # via
     #   flask
     #   flask-wtf
-jinja2==2.11.3
+jinja2==3.0.0
     # via flask
 jsmin==2.2.2
     # via -r requirements.in
 limits==1.5.1
     # via flask-limiter
-markupsafe==1.1.1
+markupsafe==2.0.0
     # via
     #   jinja2
     #   wtforms
@@ -61,7 +61,7 @@ redis==3.5.3
     # via -r requirements.in
 requests==2.25.1
     # via -r requirements.in
-six==1.15.0
+six==1.16.0
     # via
     #   flask-limiter
     #   flask-talisman
@@ -70,7 +70,7 @@ urllib3==1.26.4
     # via requests
 webassets==2.0
     # via flask-assets
-werkzeug==1.0.1
+werkzeug==2.0.0
     # via flask
 wtforms==2.3.3
     # via flask-wtf
