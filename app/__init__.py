@@ -49,7 +49,7 @@ def create_app(config_class=Config):
 
     from app.organisation import bp as organisation_bp
 
-    app.register_blueprint(organisation_bp, url_prefix="/organisation")
+    app.register_blueprint(organisation_bp)
 
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(logging.INFO)
