@@ -17,10 +17,10 @@
         <p class="lead">Are you sure you want to delete {{ practice.name }}?</p>
         <dl class="row">
             <dt class="col-sm-3">Head of practice</dt>
-            <dd class="col-sm-9">{{ practice.head }}</dd>
+            <dd class="col-sm-9"><a href="#">{{ practice.head }}</a></dd>
             
             <dt class="col-sm-3">Roles</dt>
-            <dd class="col-sm-9">{{ practice.roles }}</dd>
+            <dd class="col-sm-9"><a href="{{ url_for('organisation.list_roles', organisation_id=practice.organisation.id, practice_id=practice.id) }}">{{ practice.roles }}</a></dd>
 
             <dt class="col-sm-3">Created</dt>
             <dd class="col-sm-9">{{ practice.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
