@@ -28,7 +28,7 @@ flask-talisman==0.7.0
     # via -r requirements.in
 flask-wtf==0.14.3
     # via -r requirements.in
-flask==2.0.0
+flask==2.0.1
     # via
     #   -r requirements.in
     #   flask-assets
