@@ -1,4 +1,4 @@
-from app.main import bp
+from app.main import main
 from app.main.forms import CookiesForm
 from flask import (
     current_app,
@@ -13,12 +13,12 @@ from flask_wtf.csrf import CSRFError
 from werkzeug.exceptions import HTTPException
 
 
-@bp.route("/", methods=["GET"])
+@main.route("", methods=["GET"])
 def index():
     return render_template("main/index.html")
 
 
-@bp.route("/cookies", methods=["GET", "POST"])
+@main.route("/cookies", methods=["GET", "POST"])
 def cookies():
     form = CookiesForm()
     # Default cookies policy to reject all categories of cookie
@@ -51,13 +51,13 @@ def cookies():
     return render_template("cookies.html", form=form)
 
 
-@bp.app_errorhandler(HTTPException)
+@main.app_errorhandler(HTTPException)
 def http_exception(error):
     current_app.logger.error("{}: {} - {}".format(error.code, error.name, request.url))
     return render_template("error.html", title=error.name, error=error), error.code
 
 
-@bp.app_errorhandler(CSRFError)
+@main.app_errorhandler(CSRFError)
 def csrf_error(error):
     current_app.logger.error("{}: {} - {}".format(error.code, error.description, request.url))
     flash("The form you were submitting has expired. Please try again.", "info")

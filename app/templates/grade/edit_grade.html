@@ -4,8 +4,10 @@
     <div class="col-md-8">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_organisations') }}">Organisations</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_organisation', organisation_id=organisation.id) }}">{{ organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=grade.organisation.id) }}">{{ grade.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('programme.list', organisation_id=grade.organisation.id) }}">Grades</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('grade.view', organisation_id=grade.organisation.id, grade_id=grade.id) }}">{{ grade.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Edit</li>
             </ol>
         </nav>
@@ -28,21 +30,6 @@
                     {{ form.name(class="form-control", type="text", spellcheck="true", aria_describedby="nameHelp") }}
                 {% endif %}
                 <div id="nameHelp" class="form-text">{{ form.name.description }}</div>
-            </div>
-            <div class="mb-3">
-                {{ form.domain.label(class="form-label") }}
-                {% if form.errors %}
-                    {% if form.domain.errors %}
-                        {{ form.domain(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="domainHelp domainError") }}
-                        {% for error in form.domain.errors %}<div id="domainError" class="invalid-feedback">{{error}}</div>{% endfor %}
-                    {% else %}
-                        {{ form.domain(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="domainHelp domainValid") }}
-                        <div id="domainValid" class="valid-feedback">Looks good!</div>
-                    {% endif %}
-                {% else %}
-                    {{ form.domain(class="form-control", type="text", spellcheck="true", aria_describedby="domainHelp") }}
-                {% endif %}
-                <div id="domainHelp" class="form-text">{{ form.domain.description }}</div>
             </div>
             <div class="d-grid gap-2 d-sm-block">
                 <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Save</button>

@@ -164,11 +164,14 @@ class Organisation(FluxAPI):
 
 
 class Programme(FluxAPI):
-    def create(self, organisation_id, name, programme_manager):
-        """Create a new Programme in an Organisation."""
+    def create(self, name, programme_manager, organisation_id):
+        """Create a new Programme."""
         url = "{0}/{1}/organisations/{2}/programmes".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        new_programme = {"name": name, "programme_manager": programme_manager}
+        new_programme = {
+            "name": name,
+            "programme_manager": programme_manager,
+        }
 
         try:
             response = requests.post(
@@ -194,7 +197,7 @@ class Programme(FluxAPI):
                 raise InternalServerError
 
     def list(self, organisation_id, **kwargs):
-        """Get a list of Programmes in an Organisation."""
+        """Get a list of Programmes."""
         if kwargs:
             args = {"name": kwargs.get("name", "")}
             qs = urlencode(args)
@@ -224,8 +227,8 @@ class Programme(FluxAPI):
             else:
                 raise InternalServerError
 
-    def get(self, organisation_id, programme_id):
-        """Get a specific Programme in an Organisation."""
+    def get(self, programme_id, organisation_id):
+        """Get a specific Programme."""
         url = "{0}/{1}/organisations/{2}/programmes/{3}".format(self.url, self.version, organisation_id, programme_id)
         headers = {"Accept": "application/json"}
 
@@ -249,7 +252,7 @@ class Programme(FluxAPI):
             else:
                 raise InternalServerError
 
-    def edit(self, organisation_id, programme_id, name, programme_manager):
+    def edit(self, programme_id, name, programme_manager, organisation_id):
         """Edit a Programme with a specific ID."""
         url = "{0}/{1}/organisations/{2}/programmes/{3}".format(self.url, self.version, organisation_id, programme_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -280,7 +283,7 @@ class Programme(FluxAPI):
             else:
                 raise InternalServerError
 
-    def delete(self, organisation_id, programme_id):
+    def delete(self, programme_id, organisation_id):
         """Delete a Organisation with a specific ID."""
         url = "{0}/{1}/organisations/{2}/programmes/{3}".format(self.url, self.version, organisation_id, programme_id)
         headers = {"Accept": "application/json"}
@@ -303,8 +306,8 @@ class Programme(FluxAPI):
 
 
 class Grade(FluxAPI):
-    def create(self, organisation_id, name):
-        """Create a new Grade in an Organisation."""
+    def create(self, name, organisation_id):
+        """Create a new Grade."""
         url = "{0}/{1}/organisations/{2}/grades".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
         new_grade = {"name": name}
@@ -333,7 +336,7 @@ class Grade(FluxAPI):
                 raise InternalServerError
 
     def list(self, organisation_id, **kwargs):
-        """Get a list of Grades in an Organisation."""
+        """Get a list of Grades."""
         if kwargs:
             args = {"name": kwargs.get("name", "")}
             qs = urlencode(args)
@@ -363,8 +366,8 @@ class Grade(FluxAPI):
             else:
                 raise InternalServerError
 
-    def get(self, organisation_id, grade_id):
-        """Get a specific Grade in an Organisation."""
+    def get(self, grade_id, organisation_id):
+        """Get a specific Grade."""
         url = "{0}/{1}/organisations/{2}/grades/{3}".format(self.url, self.version, organisation_id, grade_id)
         headers = {"Accept": "application/json"}
 
@@ -388,7 +391,7 @@ class Grade(FluxAPI):
             else:
                 raise InternalServerError
 
-    def edit(self, organisation_id, grade_id, name):
+    def edit(self, grade_id, name, organisation_id):
         """Edit a Grade with a specific ID."""
         url = "{0}/{1}/organisations/{2}/grades/{3}".format(self.url, self.version, organisation_id, grade_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -419,7 +422,7 @@ class Grade(FluxAPI):
             else:
                 raise InternalServerError
 
-    def delete(self, organisation_id, grade_id):
+    def delete(self, grade_id, organisation_id):
         """Delete a Grade with a specific ID."""
         url = "{0}/{1}/organisations/{2}/grades/{3}".format(self.url, self.version, organisation_id, grade_id)
         headers = {"Accept": "application/json"}
@@ -442,8 +445,8 @@ class Grade(FluxAPI):
 
 
 class Practice(FluxAPI):
-    def create(self, organisation_id, name, head):
-        """Create a new Practice in an Organisation."""
+    def create(self, name, head, organisation_id):
+        """Create a new Practice."""
         url = "{0}/{1}/organisations/{2}/practices".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
         new_practice = {"name": name, "head": head}
@@ -472,7 +475,7 @@ class Practice(FluxAPI):
                 raise InternalServerError
 
     def list(self, organisation_id, **kwargs):
-        """Get a list of Practices in an Organisation."""
+        """Get a list of Practices."""
         if kwargs:
             args = {"name": kwargs.get("name", "")}
             qs = urlencode(args)
@@ -502,8 +505,8 @@ class Practice(FluxAPI):
             else:
                 raise InternalServerError
 
-    def get(self, organisation_id, practice_id):
-        """Get a specific Practice in an Organisation."""
+    def get(self, practice_id, organisation_id):
+        """Get a specific Practice."""
         url = "{0}/{1}/organisations/{2}/practices/{3}".format(self.url, self.version, organisation_id, practice_id)
         headers = {"Accept": "application/json"}
 
@@ -527,7 +530,7 @@ class Practice(FluxAPI):
             else:
                 raise InternalServerError
 
-    def edit(self, organisation_id, practice_id, name, head):
+    def edit(self, practice_id, name, head, organisation_id):
         """Edit a Practice with a specific ID."""
         url = "{0}/{1}/organisations/{2}/practices/{3}".format(self.url, self.version, organisation_id, practice_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -558,7 +561,7 @@ class Practice(FluxAPI):
             else:
                 raise InternalServerError
 
-    def delete(self, organisation_id, practice_id):
+    def delete(self, practice_id, organisation_id):
         """Delete a Practice with a specific ID."""
         url = "{0}/{1}/organisations/{2}/practices/{3}".format(self.url, self.version, organisation_id, practice_id)
         headers = {"Accept": "application/json"}
@@ -581,13 +584,11 @@ class Practice(FluxAPI):
 
 
 class Role(FluxAPI):
-    def create(self, organisation_id, practice_id, name):
-        """Create a new Role in a Practice."""
-        url = "{0}/{1}/organisations/{2}/practices/{3}/roles".format(
-            self.url, self.version, organisation_id, practice_id
-        )
+    def create(self, title, grade_id, practice_id, organisation_id):
+        """Create a new Role."""
+        url = "{0}/{1}/organisations/{2}/roles".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        new_role = {"name": name}
+        new_role = {"title": title, "grade_id": grade_id, "practice_id": practice_id}
 
         try:
             response = requests.post(
@@ -612,18 +613,14 @@ class Role(FluxAPI):
             else:
                 raise InternalServerError
 
-    def list(self, organisation_id, practice_id, **kwargs):
-        """Get a list of Roles in an Practice."""
+    def list(self, organisation_id, **kwargs):
+        """Get a list of Roles."""
         if kwargs:
             args = {"name": kwargs.get("name", "")}
             qs = urlencode(args)
-            url = "{0}/{1}/organisations/{2}/practices/{3}/roles?{4}".format(
-                self.url, self.version, organisation_id, practice_id, qs
-            )
+            url = "{0}/{1}/organisations/{2}/roles?{3}".format(self.url, self.version, organisation_id, qs)
         else:
-            url = "{0}/{1}/organisations/{2}/practices/{3}/roles".format(
-                self.url, self.version, organisation_id, practice_id
-            )
+            url = "{0}/{1}/organisations/{2}/roles".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json"}
 
         try:
@@ -647,11 +644,9 @@ class Role(FluxAPI):
             else:
                 raise InternalServerError
 
-    def get(self, organisation_id, practice_id, role_id):
-        """Get a specific Role in an Practice."""
-        url = "{0}/{1}/organisations/{2}/practices/{3}/roles/{4}".format(
-            self.url, self.version, organisation_id, practice_id, role_id
-        )
+    def get(self, role_id, organisation_id):
+        """Get a specific Role."""
+        url = "{0}/{1}/organisations/{2}/roles/{3}".format(self.url, self.version, organisation_id, role_id)
         headers = {"Accept": "application/json"}
 
         try:
@@ -674,13 +669,15 @@ class Role(FluxAPI):
             else:
                 raise InternalServerError
 
-    def edit(self, organisation_id, practice_id, role_id, name):
+    def edit(self, role_id, title, grade_id, practice_id, organisation_id):
         """Edit a Role with a specific ID."""
-        url = "{0}/{1}/organisations/{2}/practices/{3}/roles/{4}".format(
-            self.url, self.version, organisation_id, practice_id, role_id
-        )
+        url = "{0}/{1}/organisations/{2}/roles/{3}".format(self.url, self.version, organisation_id, role_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        changed_role = {"name": name}
+        changed_role = {
+            "title": title,
+            "grade_id": grade_id,
+            "practice_id": practice_id,
+        }
 
         try:
             response = requests.put(
@@ -707,11 +704,9 @@ class Role(FluxAPI):
             else:
                 raise InternalServerError
 
-    def delete(self, organisation_id, practice_id, role_id):
+    def delete(self, role_id, organisation_id):
         """Delete a Role with a specific ID."""
-        url = "{0}/{1}/organisations/{2}/practices/{3}/roles/{4}".format(
-            self.url, self.version, organisation_id, practice_id, role_id
-        )
+        url = "{0}/{1}/organisations/{2}/roles/{3}".format(self.url, self.version, organisation_id, role_id)
         headers = {"Accept": "application/json"}
 
         try:

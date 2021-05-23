@@ -4,8 +4,8 @@
     <div class="col">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_organisations') }}">Organisations</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_organisation', organisation_id=organisation.id) }}">{{ organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=organisation.id) }}">{{ organisation.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
             </ol>
         </nav>
@@ -17,7 +17,7 @@
 <div class="row">
     <div class="col-md-6 mb-3">
         <div class="d-grid gap-2 d-sm-block">
-            <a class="btn btn-primary" href="{{ url_for('organisation.create_practice', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New practice</a>
+            <a class="btn btn-primary" href="{{ url_for('practice.create', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New practice</a>
         </div>
     </div>
     <div class="col-md-6">
@@ -46,10 +46,10 @@
                     <tbody>
                         {% for practice in practices %}
                             <tr>
-                                <th scope="row"><a href="{{ url_for('organisation.view_practice', organisation_id=organisation.id, practice_id=practice.id) }}">{{ practice.name }}</a></th>
+                                <th scope="row"><a href="{{ url_for('practice.view', organisation_id=organisation.id, practice_id=practice.id) }}">{{ practice.name }}</a></th>
                                 <td><i class="bi bi-person"></i><a href="#">{{ practice.head }}</a></td>
-                                <td><a href="{{ url_for('organisation.list_roles', organisation_id=practice.organisation.id, practice_id=practice.id) }}">{{ practice.roles }}</a></td>
-                                <td><a href="{{ url_for('organisation.edit_practice', organisation_id=organisation.id, practice_id=practice.id) }}">Edit</a> | <a href="{{ url_for('organisation.delete_practice', organisation_id=organisation.id, practice_id=practice.id) }}" class="link-danger">Delete</a></td>
+                                <td><a href="{{ url_for('role.list', organisation_id=practice.organisation.id) }}">{{ practice.roles }}</a></td>
+                                <td><a href="{{ url_for('practice.edit', organisation_id=organisation.id, practice_id=practice.id) }}">Edit</a> | <a href="{{ url_for('practice.delete', organisation_id=organisation.id, practice_id=practice.id) }}" class="link-danger">Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

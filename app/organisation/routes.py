@@ -1,17 +1,12 @@
 from app import csrf
-from app.integrations.flux_api import Grade, Organisation, Practice, Programme, Role
-from app.organisation import bp
-from app.organisation.forms import (
-    GradeForm,
-    OrganisationForm,
-    PracticeForm,
-    ProgrammeForm,
-)
+from app.integrations.flux_api import Organisation
+from app.organisation import organisation
+from app.organisation.forms import OrganisationForm
 from flask import flash, redirect, render_template, request, url_for
 
 
-@bp.route("/", methods=["GET", "POST"])
-def list_organisations():
+@organisation.route("/", methods=["GET", "POST"])
+def list():
     """Get a list of Organisations."""
     name_query = request.args.get("name", type=str)
 
@@ -21,14 +16,14 @@ def list_organisations():
         organisations = Organisation().list()
 
     return render_template(
-        "organisation/list_organisations.html",
+        "list_organisations.html",
         title="Organisations",
         organisations=organisations,
     )
 
 
-@bp.route("/new", methods=["GET", "POST"])
-def create_organisation():
+@organisation.route("/new", methods=["GET", "POST"])
+def create():
     """Create a new Organisation."""
     form = OrganisationForm()
 
@@ -37,36 +32,36 @@ def create_organisation():
         flash(
             "<a href='{}' class='alert-link'>{}</a> has been created.".format(
                 url_for(
-                    "organisation.view_organisation",
+                    "organisation.view",
                     organisation_id=new_organisation["id"],
                 ),
                 new_organisation["name"],
             ),
             "success",
         )
-        return redirect(url_for("organisation.list_organisations"))
+        return redirect(url_for("organisation.list"))
 
     return render_template(
-        "organisation/create_organisation.html",
+        "create_organisation.html",
         title="Create a new organisation",
         form=form,
     )
 
 
-@bp.route("/<uuid:organisation_id>", methods=["GET"])
-def view_organisation(organisation_id):
+@organisation.route("/<uuid:organisation_id>", methods=["GET"])
+def view(organisation_id):
     """View a Organisation with a specific ID."""
-    organisation = Organisation().get(organisation_id)
+    organisation = Organisation().get(organisation_id=organisation_id)
 
     return render_template(
-        "organisation/view_organisation.html",
+        "view_organisation.html",
         title=organisation["name"],
         organisation=organisation,
     )
 
 
-@bp.route("/<uuid:organisation_id>/edit", methods=["GET", "POST"])
-def edit_organisation(organisation_id):
+@organisation.route("/<uuid:organisation_id>/edit", methods=["GET", "POST"])
+def edit(organisation_id):
     """Edit a Organisation with a specific ID."""
     form = OrganisationForm()
 
@@ -78,408 +73,38 @@ def edit_organisation(organisation_id):
         )
         flash(
             "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
-                url_for("organisation.view_organisation", organisation_id=organisation_id),
+                url_for("organisation.view", organisation_id=organisation_id),
                 changed_organisation["name"],
             ),
             "success",
         )
-        return redirect(url_for("organisation.list_organisations"))
+        return redirect(url_for("organisation.list"))
     elif request.method == "GET":
-        organisation = Organisation().get(organisation_id)
+        organisation = Organisation().get(organisation_id=organisation_id)
         form.name.data = organisation["name"]
         form.domain.data = organisation["domain"]
 
     return render_template(
-        "organisation/update_organisation.html",
+        "edit_organisation.html",
         title="Edit {}".format(organisation["name"]),
         form=form,
         organisation=organisation,
     )
 
 
-@bp.route("/<uuid:organisation_id>/delete", methods=["GET", "POST"])
+@organisation.route("/<uuid:organisation_id>/delete", methods=["GET", "POST"])
 @csrf.exempt
-def delete_organisation(organisation_id):
+def delete(organisation_id):
     """Delete a Organisation with a specific ID."""
-    organisation = Organisation().get(organisation_id)
+    organisation = Organisation().get(organisation_id=organisation_id)
 
     if request.method == "GET":
         return render_template(
-            "organisation/delete_organisation.html",
+            "delete_organisation.html",
             title="Delete {}".format(organisation["name"]),
             organisation=organisation,
         )
     elif request.method == "POST":
-        Organisation().delete(organisation_id)
+        Organisation().delete(organisation_id=organisation_id)
         flash("{} has been deleted.".format(organisation["name"]), "success")
-        return redirect(url_for("organisation.list_organisations"))
-
-
-@bp.route("/<uuid:organisation_id>/programme", methods=["GET", "POST"])
-def list_programmes(organisation_id):
-    """Get a list of Programmes."""
-    name_query = request.args.get("name", type=str)
-    organisation = Organisation().get(organisation_id)
-
-    if name_query:
-        programmes = Programme().list(organisation_id=organisation_id, name=name_query)
-    else:
-        programmes = Programme().list(organisation_id=organisation_id)
-
-    return render_template(
-        "programme/list_programmes.html",
-        title="Programmes",
-        organisation=organisation,
-        programmes=programmes,
-    )
-
-
-@bp.route("/<uuid:organisation_id>/programme/new", methods=["GET", "POST"])
-def create_programme(organisation_id):
-    """Create a new Programme."""
-    form = ProgrammeForm()
-    organisation = Organisation().get(organisation_id)
-
-    if form.validate_on_submit():
-        new_programme = Programme().create(
-            organisation_id=organisation_id,
-            name=form.name.data,
-            programme_manager=form.programme_manager.data,
-        )
-        flash(
-            "<a href='{}' class='alert-link'>{}</a> has been created.".format(
-                url_for(
-                    "organisation.view_programme",
-                    organisation_id=organisation_id,
-                    programme_id=new_programme["id"],
-                ),
-                new_programme["name"],
-            ),
-            "success",
-        )
-        return redirect(url_for("organisation.list_programmes", organisation_id=organisation_id))
-
-    return render_template(
-        "programme/create_programme.html",
-        title="Create a new programme",
-        organisation=organisation,
-        form=form,
-    )
-
-
-@bp.route("/<uuid:organisation_id>/programme/<uuid:programme_id>", methods=["GET"])
-def view_programme(organisation_id, programme_id):
-    """View a specific Programme in an Organisation."""
-    programme = Programme().get(organisation_id, programme_id)
-
-    return render_template(
-        "programme/view_programme.html",
-        title=programme["name"],
-        programme=programme,
-    )
-
-
-@bp.route(
-    "/<uuid:organisation_id>/programme/<uuid:programme_id>/edit",
-    methods=["GET", "POST"],
-)
-def edit_programme(organisation_id, programme_id):
-    """Edit a specific Programme in an Organisation."""
-    form = ProgrammeForm()
-
-    if form.validate_on_submit():
-        changed_programme = Programme().edit(
-            organisation_id=organisation_id,
-            programme_id=programme_id,
-            name=form.name.data,
-            programme_manager=form.programme_manager.data,
-        )
-        flash(
-            "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
-                url_for(
-                    "organisation.view_programme",
-                    organisation_id=organisation_id,
-                    programme_id=programme_id,
-                ),
-                changed_programme["name"],
-            ),
-            "success",
-        )
-        return redirect(url_for("organisation.list_programmes", organisation_id=organisation_id))
-    elif request.method == "GET":
-        programme = Programme().get(organisation_id, programme_id)
-        form.name.data = programme["name"]
-        form.programme_manager.data = programme["programme_manager"]
-
-    return render_template(
-        "programme/update_programme.html",
-        title="Edit {}".format(programme["name"]),
-        form=form,
-        programme=programme,
-    )
-
-
-@bp.route(
-    "/<uuid:organisation_id>/programme/<uuid:programme_id>/delete",
-    methods=["GET", "POST"],
-)
-@csrf.exempt
-def delete_programme(organisation_id, programme_id):
-    """Delete a specific Programme in an Organisation."""
-    programme = Programme().get(organisation_id, programme_id)
-
-    if request.method == "GET":
-        return render_template(
-            "programme/delete_programme.html",
-            title="Delete {}".format(programme["name"]),
-            programme=programme,
-        )
-    elif request.method == "POST":
-        Programme().delete(organisation_id, programme_id)
-        flash("{} has been deleted.".format(programme["name"]), "success")
-        return redirect(url_for("organisation.list_programmes", organisation_id=organisation_id))
-
-
-@bp.route("/<uuid:organisation_id>/grade", methods=["GET", "POST"])
-def list_grades(organisation_id):
-    """Get a list of Grades."""
-    name_query = request.args.get("name", type=str)
-    organisation = Organisation().get(organisation_id)
-
-    if name_query:
-        grades = Grade().list(organisation_id=organisation_id, name=name_query)
-    else:
-        grades = Grade().list(organisation_id=organisation_id)
-
-    return render_template(
-        "grade/list_grades.html",
-        title="Grades",
-        organisation=organisation,
-        grades=grades,
-    )
-
-
-@bp.route("/<uuid:organisation_id>/grade/new", methods=["GET", "POST"])
-def create_grade(organisation_id):
-    """Create a new Grade."""
-    form = GradeForm()
-    organisation = Organisation().get(organisation_id)
-
-    if form.validate_on_submit():
-        new_grade = Grade().create(organisation_id=organisation_id, name=form.name.data)
-        flash(
-            "<a href='{}' class='alert-link'>{}</a> has been created.".format(
-                url_for(
-                    "organisation.view_grade",
-                    organisation_id=organisation_id,
-                    grade_id=new_grade["id"],
-                ),
-                new_grade["name"],
-            ),
-            "success",
-        )
-        return redirect(url_for("organisation.list_grades", organisation_id=organisation_id))
-
-    return render_template(
-        "grade/create_grade.html",
-        title="Create a new grade",
-        organisation=organisation,
-        form=form,
-    )
-
-
-@bp.route("/<uuid:organisation_id>/grade/<uuid:grade_id>", methods=["GET"])
-def view_grade(organisation_id, grade_id):
-    """View a specific Grade in an Organisation."""
-    grade = Grade().get(organisation_id, grade_id)
-
-    return render_template(
-        "grade/view_grade.html",
-        title=grade["name"],
-        grade=grade,
-    )
-
-
-@bp.route(
-    "/<uuid:organisation_id>/grade/<uuid:grade_id>/edit",
-    methods=["GET", "POST"],
-)
-def edit_grade(organisation_id, grade_id):
-    """Edit a specific Grade in an Organisation."""
-    form = GradeForm()
-
-    if form.validate_on_submit():
-        changed_grade = Grade().edit(organisation_id=organisation_id, grade_id=grade_id, name=form.name.data)
-        flash(
-            "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
-                url_for(
-                    "organisation.view_grade",
-                    organisation_id=organisation_id,
-                    grade_id=grade_id,
-                ),
-                changed_grade["name"],
-            ),
-            "success",
-        )
-        return redirect(url_for("organisation.list_grades", organisation_id=organisation_id))
-    elif request.method == "GET":
-        grade = Grade().get(organisation_id, grade_id)
-        form.name.data = grade["name"]
-
-    return render_template(
-        "grade/update_grade.html",
-        title="Edit {}".format(grade["name"]),
-        form=form,
-        grade=grade,
-    )
-
-
-@bp.route(
-    "/<uuid:organisation_id>/grade/<uuid:grade_id>/delete",
-    methods=["GET", "POST"],
-)
-@csrf.exempt
-def delete_grade(organisation_id, grade_id):
-    """Delete a specific Grade in an Organisation."""
-    grade = Grade().get(organisation_id, grade_id)
-
-    if request.method == "GET":
-        return render_template(
-            "grade/delete_grade.html",
-            title="Delete {}".format(grade["name"]),
-            grade=grade,
-        )
-    elif request.method == "POST":
-        Grade().delete(organisation_id, grade_id)
-        flash("{} has been deleted.".format(grade["name"]), "success")
-        return redirect(url_for("organisation.list_grades", organisation_id=organisation_id))
-
-
-@bp.route(
-    "/<uuid:organisation_id>/practice/",
-    methods=["GET", "POST"],
-)
-def list_practices(organisation_id):
-    """Get a list of Practices."""
-    name_query = request.args.get("name", type=str)
-    organisation = Organisation().get(organisation_id)
-
-    if name_query:
-        practices = Practice().list(organisation_id=organisation_id, name=name_query)
-    else:
-        practices = Practice().list(organisation_id=organisation_id)
-
-    return render_template(
-        "practice/list_practices.html",
-        title="Practices",
-        organisation=organisation,
-        practices=practices,
-    )
-
-
-@bp.route(
-    "/<uuid:organisation_id>/practice/new",
-    methods=["GET", "POST"],
-)
-def create_practice(organisation_id):
-    """Create a new Practice."""
-    form = PracticeForm()
-    organisation = Organisation().get(organisation_id)
-
-    if form.validate_on_submit():
-        new_practice = Practice().create(organisation_id=organisation_id, name=form.name.data, head=form.head.data)
-        flash(
-            "<a href='{}' class='alert-link'>{}</a> has been created.".format(
-                url_for(
-                    "organisation.view_practice",
-                    organisation_id=organisation_id,
-                    practice_id=new_practice["id"],
-                ),
-                new_practice["name"],
-            ),
-            "success",
-        )
-        return redirect(url_for("organisation.list_practices", organisation_id=organisation_id))
-
-    return render_template(
-        "practice/create_practice.html",
-        title="Create a new practice",
-        organisation=organisation,
-        form=form,
-    )
-
-
-@bp.route(
-    "/<uuid:organisation_id>/practice/<uuid:practice_id>",
-    methods=["GET"],
-)
-def view_practice(organisation_id, practice_id):
-    """View a specific Practice in an Practice."""
-    practice = Practice().get(organisation_id, practice_id)
-
-    return render_template(
-        "practice/view_practice.html",
-        title=practice["name"],
-        practice=practice,
-    )
-
-
-@bp.route(
-    "/<uuid:organisation_id>/practice/<uuid:practice_id>/edit",
-    methods=["GET", "POST"],
-)
-def edit_practice(organisation_id, practice_id):
-    """Edit a specific Practice in an Practice."""
-    form = PracticeForm()
-
-    if form.validate_on_submit():
-        changed_practice = Practice().edit(
-            organisation_id=organisation_id,
-            practice_id=practice_id,
-            name=form.name.data,
-            head=form.head.data,
-        )
-        flash(
-            "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
-                url_for(
-                    "organisation.view_practice",
-                    organisation_id=organisation_id,
-                    practice_id=practice_id,
-                ),
-                changed_practice["name"],
-            ),
-            "success",
-        )
-        return redirect(url_for("organisation.list_practices", organisation_id=organisation_id))
-    elif request.method == "GET":
-        practice = Practice().get(organisation_id, practice_id)
-        form.name.data = practice["name"]
-        form.head.data = practice["head"]
-
-    return render_template(
-        "practice/update_practice.html",
-        title="Edit {}".format(practice["name"]),
-        form=form,
-        practice=practice,
-    )
-
-
-@bp.route(
-    "/<uuid:organisation_id>/practice/<uuid:practice_id>/delete",
-    methods=["GET", "POST"],
-)
-@csrf.exempt
-def delete_practice(organisation_id, practice_id):
-    """Delete a specific Practice in an Practice."""
-    practice = Practice().get(organisation_id, practice_id)
-
-    if request.method == "GET":
-        return render_template(
-            "practice/delete_practice.html",
-            title="Delete {}".format(practice["name"]),
-            practice=practice,
-        )
-    elif request.method == "POST":
-        Practice().delete(organisation_id, practice_id)
-        flash("{} has been deleted.".format(practice["name"]), "success")
-        return redirect(url_for("organisation.list_practices", organisation_id=organisation_id))
+        return redirect(url_for("organisation.list"))

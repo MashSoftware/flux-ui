@@ -17,7 +17,7 @@
 <div class="row">
     <div class="col-md-6 mb-3">
         <div class="d-grid gap-2 d-sm-block">
-            <a class="btn btn-primary" href="{{ url_for('programme.create', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New programme</a>
+            <a class="btn btn-primary" href="{{ url_for('role.create', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New role</a>
         </div>
     </div>
     <div class="col-md-6">
@@ -31,25 +31,27 @@
 </div>
 <div class="row">
     <div class="col">
-        <p class="lead">{{ programmes|length if programmes else 0 }} programmes{% if request.args.name %} containing "{{ request.args.name }}"{% endif %}</p>
-        {% if programmes %}
+        <p class="lead">{{ roles|length if roles else 0 }} roles{% if request.args.name %} containing "{{ request.args.name }}"{% endif %}</p>
+        {% if roles %}
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Programme manager</th>
-                            <th scope="col">Projects</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Grade</th>
+                            <th scope="col">Practice</th>
+                            <th scope="col">People</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for programme in programmes %}
+                        {% for role in roles %}
                             <tr>
-                                <th scope="row"><a href="{{ url_for('programme.view', organisation_id=organisation.id, programme_id=programme.id) }}">{{ programme.name }}</a></th>
-                                <td><i class="bi bi-person"></i><a href="#">{{ programme.programme_manager }}</a></td>
-                                <td><a href="#">3</a></td>
-                                <td><a href="{{ url_for('programme.edit', organisation_id=organisation.id, programme_id=programme.id) }}">Edit</a> | <a href="{{ url_for('programme.delete', organisation_id=organisation.id, programme_id=programme.id) }}" class="link-danger">Delete</a></td>
+                                <th scope="row"><a href="{{ url_for('role.view', organisation_id=organisation.id, role_id=role.id) }}">{{ role.title }}</a></th>
+                                <td><a href="{{ url_for('grade.view', organisation_id=organisation.id, grade_id=role.grade.id) }}">{{ role.grade.name }}</a></td>
+                                <td><a href="{{ url_for('practice.view', organisation_id=organisation.id, practice_id=role.practice.id) }}">{{ role.practice.name }}</a></td>
+                                <td><a href="#">{{ role.people }}</a></td>
+                                <td><a href="{{ url_for('role.edit', organisation_id=organisation.id, role_id=role.id) }}">Edit</a> | <a href="{{ url_for('role.delete', organisation_id=organisation.id, role_id=role.id) }}" class="link-danger">Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

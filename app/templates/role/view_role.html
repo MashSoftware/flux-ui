@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=role.organisation.id) }}">{{ role.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('role.list', organisation_id=role.organisation.id) }}">Roles</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <h1 class="text-truncate">{{ title }}</h1>
+        <hr>
+        <dl class="row">
+            <dt class="col-sm-3">Title</dt>
+            <dd class="col-sm-9">{{ role.title }}</dd>
+            
+            <dt class="col-sm-3">Grade</dt>
+            <dd class="col-sm-9">{{ role.grade.name }}</dd>
+            
+            <dt class="col-sm-3">Practice</dt>
+            <dd class="col-sm-9">{{ role.practice.name }}</dd>
+
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">{{ role.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+            <dt class="col-sm-3">Last updated</dt>
+            <dd class="col-sm-9">{{ role.updated_at.strftime("%d/%m/%Y %H:%M:%S") if role.updated_at else "Never" }}</dd>
+        </dl>
+        <div class="d-grid gap-2 d-sm-block">
+            <a class="btn btn-primary" href="{{ url_for('role.edit', organisation_id=role.organisation.id, role_id=role.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>
+            <a class="btn btn-danger" href="{{ url_for('role.delete', organisation_id=role.organisation.id, role_id=role.id) }}"><i class="bi bi-trash"></i> Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

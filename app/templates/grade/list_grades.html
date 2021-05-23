@@ -4,8 +4,8 @@
     <div class="col">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_organisations') }}">Organisations</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_organisation', organisation_id=organisation.id) }}">{{ organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=organisation.id) }}">{{ organisation.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
             </ol>
         </nav>
@@ -17,7 +17,7 @@
 <div class="row">
     <div class="col-md-6 mb-3">
         <div class="d-grid gap-2 d-sm-block">
-            <a class="btn btn-primary" href="{{ url_for('organisation.create_grade', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New grade</a>
+            <a class="btn btn-primary" href="{{ url_for('grade.create', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New grade</a>
         </div>
     </div>
     <div class="col-md-6">
@@ -38,16 +38,16 @@
                 <thead>
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Jobs</th>
+                        <th scope="col">Roles</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for grade in grades %}
                     <tr>
-                        <th scope="row"><a href="{{ url_for('organisation.view_grade', organisation_id=organisation.id, grade_id=grade.id) }}">{{ grade.name }}</a></th>
-                        <td><a href="#">5</a></td>
-                        <td><a href="{{ url_for('organisation.edit_grade', organisation_id=organisation.id, grade_id=grade.id) }}">Edit</a> | <a href="{{ url_for('organisation.delete_grade', organisation_id=organisation.id, grade_id=grade.id) }}" class="link-danger">Delete</a></td>
+                        <th scope="row"><a href="{{ url_for('grade.view', organisation_id=organisation.id, grade_id=grade.id) }}">{{ grade.name }}</a></th>
+                        <td><a href="{{ url_for('role.list', organisation_id=organisation.id) }}">{{ grade.roles }}</a></td>
+                        <td><a href="{{ url_for('grade.edit', organisation_id=organisation.id, grade_id=grade.id) }}">Edit</a> | <a href="{{ url_for('grade.delete', organisation_id=organisation.id, grade_id=grade.id) }}" class="link-danger">Delete</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>

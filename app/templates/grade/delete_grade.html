@@ -4,10 +4,10 @@
     <div class="col-md-8">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_organisations') }}">Organisations</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_organisation', organisation_id=grade.organisation.id) }}">{{ grade.organisation.name }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list_programmes', organisation_id=grade.organisation.id) }}">Grades</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view_grade', organisation_id=grade.organisation.id, grade_id=grade.id) }}">{{ grade.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=grade.organisation.id) }}">{{ grade.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('grade.list', organisation_id=grade.organisation.id) }}">Grades</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('grade.view', organisation_id=grade.organisation.id, grade_id=grade.id) }}">{{ grade.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Delete</li>
             </ol>
         </nav>
@@ -16,8 +16,8 @@
         <hr>
         <p class="lead">Are you sure you want to delete {{ grade.name }}?</p>
         <dl class="row">
-            <dt class="col-sm-3">Jobs</dt>
-            <dd class="col-sm-9"><a href="#">5</a></dd>
+            <dt class="col-sm-3">Roles</dt>
+            <dd class="col-sm-9"><a href="{{ url_for('role.list', organisation_id=grade.organisation.id) }}">{{ grade.roles }}</a></dd>
 
             <dt class="col-sm-3">Created</dt>
             <dd class="col-sm-9">{{ grade.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
