@@ -32,9 +32,6 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Domain</th>
-                            <th scope="col">Programmes</th>
-                            <th scope="col">Grades</th>
-                            <th scope="col">Practices</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -43,10 +40,7 @@
                             <tr>
                                 <th scope="row"><a href="{{ url_for('organisation.view', organisation_id=organisation.id) }}">{{ organisation.name }}</a></th>
                                 <td>{{ organisation.domain }}</td>
-                                <td><a href="{{ url_for('programme.list', organisation_id=organisation.id) }}">{{ organisation.programmes }}</a></td>
-                                <td><a href="{{ url_for('grade.list', organisation_id=organisation.id) }}">{{ organisation.grades }}</a></td>
-                                <td><a href="{{ url_for('practice.list', organisation_id=organisation.id) }}">{{ organisation.practices }}</a></td>
-                                <td><a href="{{ url_for('organisation.edit', organisation_id=organisation.id) }}">Edit</a> | <a href="{{ url_for('organisation.delete', organisation_id=organisation.id) }}" class="link-danger">Delete</a></td>
+                                <td><a href="{{ url_for('organisation.edit', organisation_id=organisation.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('organisation.delete', organisation_id=organisation.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
