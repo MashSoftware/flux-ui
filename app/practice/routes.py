@@ -1,5 +1,5 @@
 from app import csrf
-from app.integrations.flux_api import Organisation, Practice
+from app.integrations.flux_api import Organisation, Person, Practice
 from app.practice import practice
 from app.practice.forms import PracticeForm
 from flask import flash, redirect, render_template, request, url_for
@@ -35,9 +35,10 @@ def create(organisation_id):
     """Create a new Practice in an Organisation."""
     form = PracticeForm()
     organisation = Organisation().get(organisation_id=organisation_id)
+    form.head.choices += [(person["id"], person["name"]) for person in Person().list(organisation_id=organisation_id)]
 
     if form.validate_on_submit():
-        new_practice = Practice().create(organisation_id=organisation_id, name=form.name.data, head=form.head.data)
+        new_practice = Practice().create(organisation_id=organisation_id, name=form.name.data, head_id=form.head.data)
         flash(
             "<a href='{}' class='alert-link'>{}</a> has been created.".format(
                 url_for(
@@ -80,14 +81,16 @@ def view(organisation_id, practice_id):
 )
 def edit(organisation_id, practice_id):
     """Edit a specific Practice in an Organisation."""
+    practice = Practice().get(organisation_id=organisation_id, practice_id=practice_id)
     form = PracticeForm()
+    form.head.choices += [(person["id"], person["name"]) for person in Person().list(organisation_id=organisation_id)]
 
     if form.validate_on_submit():
         changed_practice = Practice().edit(
             organisation_id=organisation_id,
             practice_id=practice_id,
             name=form.name.data,
-            head=form.head.data,
+            head_id=form.head.data,
         )
         flash(
             "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
@@ -102,9 +105,9 @@ def edit(organisation_id, practice_id):
         )
         return redirect(url_for("practice.list", organisation_id=organisation_id))
     elif request.method == "GET":
-        practice = Practice().get(organisation_id=organisation_id, practice_id=practice_id)
         form.name.data = practice["name"]
-        form.head.data = practice["head"]
+        if practice["head"]:
+            form.head.data = practice["head"]["id"]
 
     return render_template(
         "edit_practice.html",
@@ -130,6 +133,6 @@ def delete(organisation_id, practice_id):
             practice=practice,
         )
     elif request.method == "POST":
-        Practice().delete(organisation_id, practice_id)
+        Practice().delete(organisation_id=organisation_id, practice_id=practice_id)
         flash("{} has been deleted.".format(practice["name"]), "success")
         return redirect(url_for("practice.list", organisation_id=organisation_id))

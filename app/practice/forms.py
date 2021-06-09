@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField
-from wtforms.validators import InputRequired
+from wtforms.fields import StringField, SelectField
+from wtforms.validators import InputRequired, Optional
 
 
 class PracticeForm(FlaskForm):
@@ -9,8 +9,8 @@ class PracticeForm(FlaskForm):
         validators=[InputRequired(message="Enter a name")],
         description="The name of the practice",
     )
-    head = StringField(
+    head = SelectField(
         "Head of practice",
-        validators=[InputRequired(message="Enter a head of practice")],
-        description="The name of the head of practice",
+        validators=[Optional()],
+        choices=[("", "None")],
     )

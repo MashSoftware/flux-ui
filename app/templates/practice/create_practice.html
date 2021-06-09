@@ -34,16 +34,15 @@
                 {{ form.head.label(class="form-label") }}
                 {% if form.errors %}
                     {% if form.head.errors %}
-                        {{ form.head(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="headHelp headError") }}
-                        {% for error in form.head.errors %}<div class="invalid-feedback" id="headError">{{error}}</div>{% endfor %}
+                        {{ form.head(class="form-select is-invalid", aria_describedby="headHelp headError") }}
+                        {% for error in form.head.errors %}<div class="invalid-feedback" id="headError">{{ error }}</div>{% endfor %}
                     {% else %}
-                        {{ form.head(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="headHelp headValid") }}
+                        {{ form.head(class="form-select is-valid", aria_describedby="headHelp headError") }}
                         <div class="valid-feedback" id="headValid">Looks good!</div>
                     {% endif %}
                 {% else %}
-                    {{ form.head(class="form-control", type="text", spellcheck="true", aria_describedby="headHelp") }}
+                    {{ form.head(class="form-select") }}
                 {% endif %}
-                <div id="headHelp" class="form-text">{{ form.head.description }}</div>
             </div>
             <div class="d-grid gap-2 d-sm-block">
                 <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Save</button>

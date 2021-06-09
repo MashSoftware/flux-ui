@@ -39,7 +39,6 @@
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Head of practice</th>
-                            <th scope="col">Roles</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -47,9 +46,8 @@
                         {% for practice in practices %}
                             <tr>
                                 <th scope="row"><a href="{{ url_for('practice.view', organisation_id=organisation.id, practice_id=practice.id) }}">{{ practice.name }}</a></th>
-                                <td><i class="bi bi-person"></i><a href="#">{{ practice.head }}</a></td>
-                                <td><a href="{{ url_for('role.list', organisation_id=practice.organisation.id) }}">{{ practice.roles }}</a></td>
-                                <td><a href="{{ url_for('practice.edit', organisation_id=organisation.id, practice_id=practice.id) }}">Edit</a> | <a href="{{ url_for('practice.delete', organisation_id=organisation.id, practice_id=practice.id) }}" class="link-danger">Delete</a></td>
+                                <td>{% if practice.head %}<a href="{{ url_for('person.view', organisation_id=organisation.id, person_id=practice.head.id) }}">{{ practice.head.name }}</a>{% else %}None{% endif %}</td>
+                                <td><a href="{{ url_for('practice.edit', organisation_id=organisation.id, practice_id=practice.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('practice.delete', organisation_id=organisation.id, practice_id=practice.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
