@@ -4,13 +4,8 @@ from urllib.parse import urlencode
 
 import requests
 from flask import current_app
-from werkzeug.exceptions import (
-    Conflict,
-    InternalServerError,
-    NotFound,
-    RequestTimeout,
-    TooManyRequests,
-)
+from werkzeug.exceptions import (BadRequest, Conflict, InternalServerError,
+                                 NotFound, RequestTimeout, TooManyRequests)
 
 
 class FluxAPI:
@@ -70,14 +65,7 @@ class Organisation(FluxAPI):
             raise InternalServerError
         else:
             if response.status_code == 200:
-                organisations = json.loads(response.text)
-                for organisation in organisations:
-                    organisation["created_at"] = datetime.strptime(organisation["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
-                    if organisation["updated_at"]:
-                        organisation["updated_at"] = datetime.strptime(
-                            organisation["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z"
-                        )
-                return organisations
+                return json.loads(response.text)
             elif response.status_code == 204:
                 return None
             elif response.status_code == 429:
@@ -164,14 +152,15 @@ class Organisation(FluxAPI):
 
 
 class Programme(FluxAPI):
-    def create(self, name, programme_manager, organisation_id):
+    def create(self, name, manager_id, organisation_id):
         """Create a new Programme."""
         url = "{0}/{1}/organisations/{2}/programmes".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
         new_programme = {
-            "name": name,
-            "programme_manager": programme_manager,
+            "name": name
         }
+        if manager_id:
+            new_programme["manager_id"] = manager_id
 
         try:
             response = requests.post(
@@ -214,12 +203,7 @@ class Programme(FluxAPI):
             raise InternalServerError
         else:
             if response.status_code == 200:
-                programmes = json.loads(response.text)
-                for programme in programmes:
-                    programme["created_at"] = datetime.strptime(programme["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
-                    if programme["updated_at"]:
-                        programme["updated_at"] = datetime.strptime(programme["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
-                return programmes
+                return json.loads(response.text)
             elif response.status_code == 204:
                 return None
             elif response.status_code == 429:
@@ -252,11 +236,13 @@ class Programme(FluxAPI):
             else:
                 raise InternalServerError
 
-    def edit(self, programme_id, name, programme_manager, organisation_id):
+    def edit(self, programme_id, name, manager_id, organisation_id):
         """Edit a Programme with a specific ID."""
         url = "{0}/{1}/organisations/{2}/programmes/{3}".format(self.url, self.version, organisation_id, programme_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        changed_programme = {"name": name, "programme_manager": programme_manager}
+        changed_programme = {"name": name}
+        if manager_id:
+            changed_programme["manager_id"] = manager_id
 
         try:
             response = requests.put(
@@ -353,12 +339,7 @@ class Grade(FluxAPI):
             raise InternalServerError
         else:
             if response.status_code == 200:
-                grades = json.loads(response.text)
-                for grade in grades:
-                    grade["created_at"] = datetime.strptime(grade["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
-                    if grade["updated_at"]:
-                        grade["updated_at"] = datetime.strptime(grade["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
-                return grades
+                return json.loads(response.text)
             elif response.status_code == 204:
                 return None
             elif response.status_code == 429:
@@ -445,11 +426,13 @@ class Grade(FluxAPI):
 
 
 class Practice(FluxAPI):
-    def create(self, name, head, organisation_id):
+    def create(self, name, head_id, organisation_id):
         """Create a new Practice."""
         url = "{0}/{1}/organisations/{2}/practices".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        new_practice = {"name": name, "head": head}
+        new_practice = {"name": name}
+        if head_id:
+            new_practice["head_id"] =  head_id
 
         try:
             response = requests.post(
@@ -492,12 +475,7 @@ class Practice(FluxAPI):
             raise InternalServerError
         else:
             if response.status_code == 200:
-                practices = json.loads(response.text)
-                for practice in practices:
-                    practice["created_at"] = datetime.strptime(practice["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
-                    if practice["updated_at"]:
-                        practice["updated_at"] = datetime.strptime(practice["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
-                return practices
+                return json.loads(response.text)
             elif response.status_code == 204:
                 return None
             elif response.status_code == 429:
@@ -530,11 +508,13 @@ class Practice(FluxAPI):
             else:
                 raise InternalServerError
 
-    def edit(self, practice_id, name, head, organisation_id):
+    def edit(self, practice_id, name, head_id, organisation_id):
         """Edit a Practice with a specific ID."""
         url = "{0}/{1}/organisations/{2}/practices/{3}".format(self.url, self.version, organisation_id, practice_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        changed_practice = {"name": name, "head": head}
+        changed_practice = {"name": name}
+        if head_id:
+            changed_practice["head_id"] =  head_id
 
         try:
             response = requests.put(
@@ -588,7 +568,9 @@ class Role(FluxAPI):
         """Create a new Role."""
         url = "{0}/{1}/organisations/{2}/roles".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        new_role = {"title": title, "grade_id": grade_id, "practice_id": practice_id}
+        new_role = {"title": title, "grade_id": grade_id}
+        if practice_id:
+            new_role["practice_id"] = practice_id
 
         try:
             response = requests.post(
@@ -616,7 +598,7 @@ class Role(FluxAPI):
     def list(self, organisation_id, **kwargs):
         """Get a list of Roles."""
         if kwargs:
-            args = {"name": kwargs.get("name", "")}
+            args = {"title": kwargs.get("title", "")}
             qs = urlencode(args)
             url = "{0}/{1}/organisations/{2}/roles?{3}".format(self.url, self.version, organisation_id, qs)
         else:
@@ -631,12 +613,7 @@ class Role(FluxAPI):
             raise InternalServerError
         else:
             if response.status_code == 200:
-                roles = json.loads(response.text)
-                for role in roles:
-                    role["created_at"] = datetime.strptime(role["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
-                    if role["updated_at"]:
-                        role["updated_at"] = datetime.strptime(role["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
-                return roles
+                return json.loads(response.text)
             elif response.status_code == 204:
                 return None
             elif response.status_code == 429:
@@ -673,11 +650,9 @@ class Role(FluxAPI):
         """Edit a Role with a specific ID."""
         url = "{0}/{1}/organisations/{2}/roles/{3}".format(self.url, self.version, organisation_id, role_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        changed_role = {
-            "title": title,
-            "grade_id": grade_id,
-            "practice_id": practice_id,
-        }
+        changed_role = {"title": title, "grade_id": grade_id}
+        if practice_id:
+            changed_role["practice_id"] = practice_id
 
         try:
             response = requests.put(
@@ -707,6 +682,175 @@ class Role(FluxAPI):
     def delete(self, role_id, organisation_id):
         """Delete a Role with a specific ID."""
         url = "{0}/{1}/organisations/{2}/roles/{3}".format(self.url, self.version, organisation_id, role_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.delete(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 204:
+                return None
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+
+class Person(FluxAPI):
+    def create(
+        self,
+        name,
+        role_id,
+        email_address,
+        full_time_equivalent,
+        location,
+        employment,
+        organisation_id,
+    ):
+        """Create a new Person."""
+        url = "{0}/{1}/organisations/{2}/people".format(self.url, self.version, organisation_id)
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        new_person = {
+            "name": name,
+            "role_id": role_id,
+            "email_address": email_address,
+            "full_time_equivalent": float(full_time_equivalent),
+            "location": location,
+            "employment": employment,
+        }
+
+        try:
+            response = requests.post(
+                url,
+                data=json.dumps(new_person),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 201:
+                organisation = json.loads(response.text)
+                organisation["created_at"] = datetime.strptime(organisation["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if organisation["updated_at"]:
+                    organisation["updated_at"] = datetime.strptime(organisation["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return organisation
+            elif response.status_code == 429:
+                raise TooManyRequests
+            elif response.status_code == 400:
+                raise BadRequest
+            else:
+                raise InternalServerError
+
+    def list(self, organisation_id, **kwargs):
+        """Get a list of People."""
+        if kwargs:
+            args = {"name": kwargs.get("name", "")}
+            qs = urlencode(args)
+            url = "{0}/{1}/organisations/{2}/people?{3}".format(self.url, self.version, organisation_id, qs)
+        else:
+            url = "{0}/{1}/organisations/{2}/people".format(self.url, self.version, organisation_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                return json.loads(response.text)
+            elif response.status_code == 204:
+                return None
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def get(self, person_id, organisation_id):
+        """Get a specific Person."""
+        url = "{0}/{1}/organisations/{2}/people/{3}".format(self.url, self.version, organisation_id, person_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                person = json.loads(response.text)
+                person["created_at"] = datetime.strptime(person["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if person["updated_at"]:
+                    person["updated_at"] = datetime.strptime(person["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return person
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def edit(
+        self,
+        person_id,
+        name,
+        role_id,
+        email_address,
+        full_time_equivalent,
+        location,
+        employment,
+        organisation_id,
+    ):
+        """Edit a Person with a specific ID."""
+        url = "{0}/{1}/organisations/{2}/people/{3}".format(self.url, self.version, organisation_id, person_id)
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        changed_person = {
+            "name": name,
+            "role_id": role_id,
+            "email_address": email_address,
+            "full_time_equivalent": float(full_time_equivalent),
+            "location": location,
+            "employment": employment,
+        }
+
+        try:
+            response = requests.put(
+                url,
+                data=json.dumps(changed_person),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                person = json.loads(response.text)
+                person["created_at"] = datetime.strptime(person["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if person["updated_at"]:
+                    person["updated_at"] = datetime.strptime(person["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return person
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def delete(self, person_id, organisation_id):
+        """Delete a Person with a specific ID."""
+        url = "{0}/{1}/organisations/{2}/people/{3}".format(self.url, self.version, organisation_id, person_id)
         headers = {"Accept": "application/json"}
 
         try:
