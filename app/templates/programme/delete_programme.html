@@ -17,7 +17,7 @@
         <p class="lead">Are you sure you want to delete {{ programme.name }}?</p>
         <dl class="row">
             <dt class="col-sm-3">Programme manager</dt>
-            <dd class="col-sm-9">{{ programme.programme_manager }}</dd>
+            <dd class="col-sm-9">{% if programme.manager %}<a href="{{ url_for('person.view', organisation_id=programme.organisation.id, person_id=programme.manager.id) }}">{{ programme.manager.name }}</a>{% else %}None{% endif %}</dd>
             
             <dt class="col-sm-3">Projects</dt>
             <dd class="col-sm-9">3</dd>

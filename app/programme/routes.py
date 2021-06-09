@@ -1,5 +1,5 @@
 from app import csrf
-from app.integrations.flux_api import Organisation, Programme
+from app.integrations.flux_api import Organisation, Programme, Person
 from app.programme import programme
 from app.programme.forms import ProgrammeForm
 from flask import flash, redirect, render_template, request, url_for
@@ -29,12 +29,13 @@ def create(organisation_id):
     """Create a new Programme in an Organisation."""
     form = ProgrammeForm()
     organisation = Organisation().get(organisation_id=organisation_id)
+    form.manager.choices += [(manager["id"], manager["name"]) for manager in Person().list(organisation_id=organisation_id)]
 
     if form.validate_on_submit():
         new_programme = Programme().create(
             organisation_id=organisation_id,
             name=form.name.data,
-            programme_manager=form.programme_manager.data,
+            manager_id=form.manager.data,
         )
         flash(
             "<a href='{}' class='alert-link'>{}</a> has been created.".format(
@@ -75,14 +76,16 @@ def view(organisation_id, programme_id):
 )
 def edit(organisation_id, programme_id):
     """Edit a specific Programme in an Organisation."""
+    programme = Programme().get(organisation_id=organisation_id, programme_id=programme_id)
     form = ProgrammeForm()
+    form.manager.choices += [(manager["id"], manager["name"]) for manager in Person().list(organisation_id=organisation_id)]
 
     if form.validate_on_submit():
         changed_programme = Programme().edit(
             organisation_id=organisation_id,
             programme_id=programme_id,
             name=form.name.data,
-            programme_manager=form.programme_manager.data,
+            manager_id=form.manager.data,
         )
         flash(
             "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
@@ -97,9 +100,9 @@ def edit(organisation_id, programme_id):
         )
         return redirect(url_for("programme.list", organisation_id=organisation_id))
     elif request.method == "GET":
-        programme = Programme().get(organisation_id=organisation_id, programme_id=programme_id)
         form.name.data = programme["name"]
-        form.programme_manager.data = programme["programme_manager"]
+        if programme["manager"]:
+            form.manager.data = programme["manager"]["id"]
 
     return render_template(
         "update_programme.html",

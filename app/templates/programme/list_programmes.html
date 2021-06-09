@@ -38,8 +38,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
-                            <th scope="col">Programme manager</th>
-                            <th scope="col">Projects</th>
+                            <th scope="col">Manager</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -47,9 +46,8 @@
                         {% for programme in programmes %}
                             <tr>
                                 <th scope="row"><a href="{{ url_for('programme.view', organisation_id=organisation.id, programme_id=programme.id) }}">{{ programme.name }}</a></th>
-                                <td><i class="bi bi-person"></i><a href="#">{{ programme.programme_manager }}</a></td>
-                                <td><a href="#">3</a></td>
-                                <td><a href="{{ url_for('programme.edit', organisation_id=organisation.id, programme_id=programme.id) }}">Edit</a> | <a href="{{ url_for('programme.delete', organisation_id=organisation.id, programme_id=programme.id) }}" class="link-danger">Delete</a></td>
+                                <td>{% if programme.manager %}<a href="{{ url_for('person.view', organisation_id=organisation.id, person_id=programme.manager.id) }}">{{ programme.manager.name }}</a>{% else %}None{% endif %}</td>
+                                <td><a href="{{ url_for('programme.edit', organisation_id=organisation.id, programme_id=programme.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('programme.delete', organisation_id=organisation.id, programme_id=programme.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

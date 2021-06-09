@@ -32,19 +32,18 @@
                 <div id="nameHelp" class="form-text">{{ form.name.description }}</div>
             </div>
             <div class="mb-3">
-                {{ form.programme_manager.label(class="form-label") }}
+                {{ form.manager.label(class="form-label") }}
                 {% if form.errors %}
-                    {% if form.programme_manager.errors %}
-                        {{ form.programme_manager(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="programmeManagerHelp programmeManagerError") }}
-                        {% for error in form.programme_manager.errors %}<div class="invalid-feedback" id="programmeManagerError">{{error}}</div>{% endfor %}
+                    {% if form.manager.errors %}
+                        {{ form.manager(class="form-select is-invalid", aria_describedby="managerHelp managerError") }}
+                        {% for error in form.manager.errors %}<div class="invalid-feedback" id="managerError">{{ error }}</div>{% endfor %}
                     {% else %}
-                        {{ form.programme_manager(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="programmeManagerHelp programmeManagerValid") }}
-                        <div class="valid-feedback" id="programmeManagerValid">Looks good!</div>
+                        {{ form.manager(class="form-select is-valid", aria_describedby="managerHelp managerError") }}
+                        <div class="valid-feedback" id="managerValid">Looks good!</div>
                     {% endif %}
                 {% else %}
-                    {{ form.programme_manager(class="form-control", type="text", spellcheck="true", aria_describedby="programmeManagerHelp") }}
+                    {{ form.manager(class="form-select") }}
                 {% endif %}
-                <div id="programmeManagerHelp" class="form-text">{{ form.programme_manager.description }}</div>
             </div>
             <div class="d-grid gap-2 d-sm-block">
                 <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Save</button>

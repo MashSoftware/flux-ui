@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField
-from wtforms.validators import InputRequired
+from wtforms.fields import StringField, SelectField
+from wtforms.validators import InputRequired, Optional
 
 
 class ProgrammeForm(FlaskForm):
@@ -9,8 +9,8 @@ class ProgrammeForm(FlaskForm):
         validators=[InputRequired(message="Enter a name")],
         description="The name of the programme",
     )
-    programme_manager = StringField(
+    manager = SelectField(
         "Programme manager",
-        validators=[InputRequired(message="Enter a programme manager")],
-        description="The name of the programme manager",
+        validators=[Optional()],
+        choices=[("", "None")],
     )
