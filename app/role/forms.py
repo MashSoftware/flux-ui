@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms.fields import SelectField, StringField
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, Optional
 
 
 class RoleForm(FlaskForm):
@@ -16,6 +16,7 @@ class RoleForm(FlaskForm):
     )
     practice = SelectField(
         "Practice",
-        validators=[InputRequired(message="Select a practice")],
+        validators=[Optional()],
         description="The practice to which this role belongs",
+        choices=[("", "None")],
     )

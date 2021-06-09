@@ -11,11 +11,11 @@ from flask import flash, redirect, render_template, request, url_for
 )
 def list(organisation_id):
     """Get a list of Roles."""
-    name_query = request.args.get("name", type=str)
+    title_query = request.args.get("title", type=str)
     organisation = Organisation().get(organisation_id=organisation_id)
 
-    if name_query:
-        roles = Role().list(organisation_id=organisation_id, name=name_query)
+    if title_query:
+        roles = Role().list(organisation_id=organisation_id, title=title_query)
     else:
         roles = Role().list(
             organisation_id=organisation_id,
@@ -38,7 +38,7 @@ def create(organisation_id):
     form = RoleForm()
     organisation = Organisation().get(organisation_id=organisation_id)
     form.grade.choices = [(grade["id"], grade["name"]) for grade in Grade().list(organisation_id=organisation_id)]
-    form.practice.choices = [
+    form.practice.choices += [
         (practice["id"], practice["name"]) for practice in Practice().list(organisation_id=organisation_id)
     ]
 
@@ -91,9 +91,10 @@ def view(organisation_id, role_id):
 )
 def edit(organisation_id, role_id):
     """Edit a specific Role in an Role."""
+    role = Role().get(organisation_id=organisation_id, role_id=role_id)
     form = RoleForm()
     form.grade.choices = [(grade["id"], grade["name"]) for grade in Grade().list(organisation_id=organisation_id)]
-    form.practice.choices = [
+    form.practice.choices += [
         (practice["id"], practice["name"]) for practice in Practice().list(organisation_id=organisation_id)
     ]
 
@@ -118,10 +119,10 @@ def edit(organisation_id, role_id):
         )
         return redirect(url_for("role.list", organisation_id=organisation_id))
     elif request.method == "GET":
-        role = Role().get(organisation_id=organisation_id, role_id=role_id)
         form.title.data = role["title"]
         form.grade.data = role["grade"]["id"]
-        form.practice.data = role["practice"]["id"]
+        if role["practice"]:
+            form.practice.data = role["practice"]["id"]
 
     return render_template(
         "edit_role.html",

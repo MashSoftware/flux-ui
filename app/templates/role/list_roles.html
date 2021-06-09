@@ -23,7 +23,7 @@
     <div class="col-md-6">
         <form action="" method="get" novalidate>
             <div class="input-group mb-3">
-                <input type="search" name="name" value="{{ request.args.name }}" class="form-control" aria-label="Search" aria-describedby="button-addon">
+                <input type="search" name="title" value="{{ request.args.title }}" class="form-control" aria-label="Search" aria-describedby="button-addon">
                 <button class="btn btn-primary" type="submit" id="button-addon" aria-label="Search"><i class="bi bi-search"></i></button>
             </div>
         </form>
@@ -31,7 +31,7 @@
 </div>
 <div class="row">
     <div class="col">
-        <p class="lead">{{ roles|length if roles else 0 }} roles{% if request.args.name %} containing "{{ request.args.name }}"{% endif %}</p>
+        <p class="lead">{{ roles|length if roles else 0 }} roles{% if request.args.title %} containing "{{ request.args.title }}"{% endif %}</p>
         {% if roles %}
             <div class="table-responsive">
                 <table class="table">
@@ -40,7 +40,6 @@
                             <th scope="col">Title</th>
                             <th scope="col">Grade</th>
                             <th scope="col">Practice</th>
-                            <th scope="col">People</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -49,9 +48,8 @@
                             <tr>
                                 <th scope="row"><a href="{{ url_for('role.view', organisation_id=organisation.id, role_id=role.id) }}">{{ role.title }}</a></th>
                                 <td><a href="{{ url_for('grade.view', organisation_id=organisation.id, grade_id=role.grade.id) }}">{{ role.grade.name }}</a></td>
-                                <td><a href="{{ url_for('practice.view', organisation_id=organisation.id, practice_id=role.practice.id) }}">{{ role.practice.name }}</a></td>
-                                <td><a href="#">{{ role.people }}</a></td>
-                                <td><a href="{{ url_for('role.edit', organisation_id=organisation.id, role_id=role.id) }}">Edit</a> | <a href="{{ url_for('role.delete', organisation_id=organisation.id, role_id=role.id) }}" class="link-danger">Delete</a></td>
+                                <td>{% if role.practice %}<a href="{{ url_for('practice.view', organisation_id=organisation.id, practice_id=role.practice.id) }}">{{ role.practice.name }}</a>{% else %}None{% endif %}</td>
+                                <td><a href="{{ url_for('role.edit', organisation_id=organisation.id, role_id=role.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('role.delete', organisation_id=organisation.id, role_id=role.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
