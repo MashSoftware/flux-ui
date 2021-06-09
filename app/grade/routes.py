@@ -71,6 +71,7 @@ def view(organisation_id, grade_id):
 )
 def edit(organisation_id, grade_id):
     """Edit a specific Grade in an Organisation."""
+    grade = Grade().get(organisation_id=organisation_id, grade_id=grade_id)
     form = GradeForm()
 
     if form.validate_on_submit():
@@ -88,7 +89,6 @@ def edit(organisation_id, grade_id):
         )
         return redirect(url_for("grade.list", organisation_id=organisation_id))
     elif request.method == "GET":
-        grade = Grade().get(organisation_id=organisation_id, grade_id=grade_id)
         form.name.data = grade["name"]
 
     return render_template(
