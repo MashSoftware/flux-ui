@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=organisation.id) }}">{{ organisation.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <h1>{{title}}</h1>
+        <hr>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="d-grid gap-2 d-sm-block">
+            <a class="btn btn-primary" href="{{ url_for('person.create', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New person</a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <form action="" method="get" novalidate>
+            <div class="input-group mb-3">
+                <input type="search" name="name" value="{{ request.args.name }}" class="form-control" aria-label="Search" aria-describedby="button-addon">
+                <button class="btn btn-primary" type="submit" id="button-addon" aria-label="Search"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <p class="lead">{{ people|length if people else 0 }} people{% if request.args.name %} containing "{{ request.args.name }}"{% endif %}</p>
+        {% if people %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Grade</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Practice</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for person in people %}
+                            <tr>
+                                <th scope="row"><a href="{{ url_for('person.view', organisation_id=organisation.id, person_id=person.id) }}">{{ person.name }}</a></th>
+                                <td><a href="{{ url_for('grade.view', organisation_id=organisation.id, grade_id=person.role.grade.id) }}">{{ person.role.grade.name }}</a></td>
+                                <td><a href="{{ url_for('role.view', organisation_id=organisation.id, role_id=person.role.id) }}">{{ person.role.title }}</a></td>
+                                <td><a href="{{ url_for('practice.view', organisation_id=organisation.id, practice_id=person.role.practice.id) }}">{{ person.role.practice.name }}</a></td>
+                                <td><a href="{{ url_for('person.edit', organisation_id=organisation.id, person_id=person.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('person.delete', organisation_id=organisation.id, person_id=person.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

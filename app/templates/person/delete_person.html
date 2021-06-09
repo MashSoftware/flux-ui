@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=person.organisation.id) }}">{{ person.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('person.list', organisation_id=person.organisation.id) }}">People</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <h1>{{title}}</h1>
+        <hr>
+        <p class="lead">Are you sure you want to delete {{ person.name }}?</p>
+        <dl class="row">
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9"><a href="mailto:{{ person.email_address }}">{{ person.email_address }}</a></dd>
+            
+            <dt class="col-sm-3">Grade</dt>
+            <dd class="col-sm-9"><a href="{{ url_for('grade.view', organisation_id=person.organisation.id, grade_id=person.role.grade.id) }}">{{ person.role.grade.name }}</a></dd>
+
+            <dt class="col-sm-3">Role</dt>
+            <dd class="col-sm-9"><a href="{{ url_for('role.view', organisation_id=person.organisation.id, role_id=person.role.id) }}">{{ person.role.title }}</a></dd>
+            
+            <dt class="col-sm-3">Practice</dt>
+            <dd class="col-sm-9">{% if person.role.practice %}<a href="{{ url_for('practice.view', organisation_id=person.organisation.id, practice_id=person.role.practice.id) }}">{{ person.role.practice.name }}</a>{% else %}None{% endif %}</dd>
+
+            <dt class="col-sm-3">Location</dt>
+            <dd class="col-sm-9">{{ person.location }}</dd>
+
+            <dt class="col-sm-3">Full time equivalent</dt>
+            <dd class="col-sm-9">{{ person.full_time_equivalent }}</dd>
+
+            <dt class="col-sm-3">Employment</dt>
+            <dd class="col-sm-9">{{ person.employment | title }}</dd>
+
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">{{ person.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+            <dt class="col-sm-3">Last updated</dt>
+            <dd class="col-sm-9">{{ person.updated_at.strftime("%d/%m/%Y %H:%M:%S") if person.updated_at else "Never" }}</dd>
+        </dl>
+        <form action="" method="post" novalidate>
+            <div class="d-grid gap-2 d-sm-block">
+                <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i> Yes, delete {{ person.title }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
