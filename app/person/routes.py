@@ -37,7 +37,9 @@ def create(organisation_id):
     """Create a new Person."""
     form = PersonForm()
     organisation = Organisation().get(organisation_id=organisation_id)
-    form.role.choices = [(role["id"], role["title"]) for role in Role().list(organisation_id=organisation_id)]
+    roles = Role().list(organisation_id=organisation_id)
+    if roles:
+        form.role.choices = [(role["id"], role["title"]) for role in roles]
 
     if form.validate_on_submit():
         new_person = Person().create(
@@ -92,8 +94,10 @@ def view(organisation_id, person_id):
 def edit(organisation_id, person_id):
     """Edit a specific Person in an Person."""
     person = Person().get(organisation_id=organisation_id, person_id=person_id)
+    roles = Role().list(organisation_id=organisation_id)
     form = PersonForm()
-    form.role.choices = [(role["id"], role["title"]) for role in Role().list(organisation_id=organisation_id)]
+    if roles:
+        form.role.choices = [(role["id"], role["title"]) for role in roles]
 
     if form.validate_on_submit():
         changed_person = Person().edit(

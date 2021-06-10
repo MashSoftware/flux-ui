@@ -29,7 +29,9 @@ def create(organisation_id):
     """Create a new Programme in an Organisation."""
     form = ProgrammeForm()
     organisation = Organisation().get(organisation_id=organisation_id)
-    form.manager.choices += [(manager["id"], manager["name"]) for manager in Person().list(organisation_id=organisation_id)]
+    people = Person().list(organisation_id=organisation_id)
+    if people:
+        form.manager.choices += [(manager["id"], manager["name"]) for manager in people]
 
     if form.validate_on_submit():
         new_programme = Programme().create(
@@ -77,8 +79,10 @@ def view(organisation_id, programme_id):
 def edit(organisation_id, programme_id):
     """Edit a specific Programme in an Organisation."""
     programme = Programme().get(organisation_id=organisation_id, programme_id=programme_id)
+    people = Person().list(organisation_id=organisation_id)
     form = ProgrammeForm()
-    form.manager.choices += [(manager["id"], manager["name"]) for manager in Person().list(organisation_id=organisation_id)]
+    if people:
+        form.manager.choices += [(manager["id"], manager["name"]) for manager in people]
 
     if form.validate_on_submit():
         changed_programme = Programme().edit(

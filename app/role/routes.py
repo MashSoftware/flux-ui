@@ -37,10 +37,14 @@ def create(organisation_id):
     """Create a new Role."""
     form = RoleForm()
     organisation = Organisation().get(organisation_id=organisation_id)
-    form.grade.choices = [(grade["id"], grade["name"]) for grade in Grade().list(organisation_id=organisation_id)]
-    form.practice.choices += [
-        (practice["id"], practice["name"]) for practice in Practice().list(organisation_id=organisation_id)
-    ]
+
+    grades = Grade().list(organisation_id=organisation_id)
+    if grades:
+        form.grade.choices = [(grade["id"], grade["name"]) for grade in grades]
+
+    practices = Practice().list(organisation_id=organisation_id)
+    if practices:
+        form.practice.choices += [(practice["id"], practice["name"]) for practice in practices]
 
     if form.validate_on_submit():
         new_role = Role().create(
@@ -93,10 +97,13 @@ def edit(organisation_id, role_id):
     """Edit a specific Role in an Role."""
     role = Role().get(organisation_id=organisation_id, role_id=role_id)
     form = RoleForm()
-    form.grade.choices = [(grade["id"], grade["name"]) for grade in Grade().list(organisation_id=organisation_id)]
-    form.practice.choices += [
-        (practice["id"], practice["name"]) for practice in Practice().list(organisation_id=organisation_id)
-    ]
+    grades = Grade().list(organisation_id=organisation_id)
+    if grades:
+        form.grade.choices = [(grade["id"], grade["name"]) for grade in grades]
+
+    practices = Practice().list(organisation_id=organisation_id)
+    if practices:
+        form.practice.choices += [(practice["id"], practice["name"]) for practice in practices]
 
     if form.validate_on_submit():
         changed_role = Role().edit(

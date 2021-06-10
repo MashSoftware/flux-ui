@@ -35,7 +35,9 @@ def create(organisation_id):
     """Create a new Practice in an Organisation."""
     form = PracticeForm()
     organisation = Organisation().get(organisation_id=organisation_id)
-    form.head.choices += [(person["id"], person["name"]) for person in Person().list(organisation_id=organisation_id)]
+    people = Person().list(organisation_id=organisation_id)
+    if people:
+        form.head.choices += [(person["id"], person["name"]) for person in people]
 
     if form.validate_on_submit():
         new_practice = Practice().create(organisation_id=organisation_id, name=form.name.data, head_id=form.head.data)
@@ -82,8 +84,10 @@ def view(organisation_id, practice_id):
 def edit(organisation_id, practice_id):
     """Edit a specific Practice in an Organisation."""
     practice = Practice().get(organisation_id=organisation_id, practice_id=practice_id)
+    people = Person().list(organisation_id=organisation_id)
     form = PracticeForm()
-    form.head.choices += [(person["id"], person["name"]) for person in Person().list(organisation_id=organisation_id)]
+    if people:
+        form.head.choices += [(person["id"], person["name"]) for person in people]
 
     if form.validate_on_submit():
         changed_practice = Practice().edit(
