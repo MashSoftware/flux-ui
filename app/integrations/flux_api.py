@@ -4,8 +4,14 @@ from urllib.parse import urlencode
 
 import requests
 from flask import current_app
-from werkzeug.exceptions import (BadRequest, Conflict, InternalServerError,
-                                 NotFound, RequestTimeout, TooManyRequests)
+from werkzeug.exceptions import (
+    BadRequest,
+    Conflict,
+    InternalServerError,
+    NotFound,
+    RequestTimeout,
+    TooManyRequests,
+)
 
 
 class FluxAPI:
@@ -156,9 +162,7 @@ class Programme(FluxAPI):
         """Create a new Programme."""
         url = "{0}/{1}/organisations/{2}/programmes".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        new_programme = {
-            "name": name
-        }
+        new_programme = {"name": name}
         if manager_id:
             new_programme["manager_id"] = manager_id
 
@@ -432,7 +436,7 @@ class Practice(FluxAPI):
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
         new_practice = {"name": name}
         if head_id:
-            new_practice["head_id"] =  head_id
+            new_practice["head_id"] = head_id
 
         try:
             response = requests.post(
@@ -514,7 +518,7 @@ class Practice(FluxAPI):
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
         changed_practice = {"name": name}
         if head_id:
-            changed_practice["head_id"] =  head_id
+            changed_practice["head_id"] = head_id
 
         try:
             response = requests.put(
