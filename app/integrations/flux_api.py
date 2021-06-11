@@ -274,8 +274,146 @@ class Programme(FluxAPI):
                 raise InternalServerError
 
     def delete(self, programme_id, organisation_id):
-        """Delete a Organisation with a specific ID."""
+        """Delete a Programme with a specific ID."""
         url = "{0}/{1}/organisations/{2}/programmes/{3}".format(self.url, self.version, organisation_id, programme_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.delete(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 204:
+                return None
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+
+class Project(FluxAPI):
+    def create(self, name, manager_id, programme_id, organisation_id):
+        """Create a new Project."""
+        url = "{0}/{1}/organisations/{2}/projects".format(self.url, self.version, organisation_id)
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        new_project = {"name": name, "programme_id": programme_id}
+        if manager_id:
+            new_project["manager_id"] = manager_id
+
+        try:
+            response = requests.post(
+                url,
+                data=json.dumps(new_project),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 201:
+                organisation = json.loads(response.text)
+                organisation["created_at"] = datetime.strptime(organisation["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if organisation["updated_at"]:
+                    organisation["updated_at"] = datetime.strptime(organisation["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return organisation
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def list(self, organisation_id, **kwargs):
+        """Get a list of Projects."""
+        if kwargs:
+            args = {"name": kwargs.get("name", "")}
+            qs = urlencode(args)
+            url = "{0}/{1}/organisations/{2}/projects?{3}".format(self.url, self.version, organisation_id, qs)
+        else:
+            url = "{0}/{1}/organisations/{2}/projects".format(self.url, self.version, organisation_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                return json.loads(response.text)
+            elif response.status_code == 204:
+                return None
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def get(self, project_id, organisation_id):
+        """Get a specific Project."""
+        url = "{0}/{1}/organisations/{2}/projects/{3}".format(self.url, self.version, organisation_id, project_id)
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                project = json.loads(response.text)
+                project["created_at"] = datetime.strptime(project["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if project["updated_at"]:
+                    project["updated_at"] = datetime.strptime(project["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return project
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def edit(self, project_id, name, manager_id, programme_id, organisation_id):
+        """Edit a Project with a specific ID."""
+        url = "{0}/{1}/organisations/{2}/projects/{3}".format(self.url, self.version, organisation_id, project_id)
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        changed_project = {"name": name, "programme_id": programme_id}
+        if manager_id:
+            changed_project["manager_id"] = manager_id
+
+        try:
+            response = requests.put(
+                url,
+                data=json.dumps(changed_project),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                project = json.loads(response.text)
+                project["created_at"] = datetime.strptime(project["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if project["updated_at"]:
+                    project["updated_at"] = datetime.strptime(project["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return project
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def delete(self, project_id, organisation_id):
+        """Delete a Project with a specific ID."""
+        url = "{0}/{1}/organisations/{2}/projects/{3}".format(self.url, self.version, organisation_id, project_id)
         headers = {"Accept": "application/json"}
 
         try:
