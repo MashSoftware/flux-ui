@@ -18,4 +18,5 @@ class ProjectForm(FlaskForm):
         "Programme",
         validators=[Optional()],
         description="The programme to which this project belongs",
+        choices=[("", "None")],
     )
