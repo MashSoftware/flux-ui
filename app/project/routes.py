@@ -97,6 +97,7 @@ def edit(organisation_id, project_id):
             project_id=project_id,
             name=form.name.data,
             manager_id=form.manager.data,
+            programme_id=form.programme.data,
         )
         flash(
             "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
