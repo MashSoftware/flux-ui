@@ -16,15 +16,24 @@
         <dl class="row">
             <dt class="col-sm-3">Domain</dt>
             <dd class="col-sm-9">{{ organisation.domain }}</dd>
-
+            
             <dt class="col-sm-3">Grades</dt>
             <dd class="col-sm-9"><a href="{{ url_for('grade.list', organisation_id=organisation.id) }}">{{ organisation.grades }}</a></dd>
 
-            <dt class="col-sm-3">Programmes</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('programme.list', organisation_id=organisation.id) }}">{{ organisation.programmes }}</a></dd>
-            
             <dt class="col-sm-3">Practices</dt>
             <dd class="col-sm-9"><a href="{{ url_for('practice.list', organisation_id=organisation.id) }}">{{ organisation.practices }}</a></dd>
+
+            <dt class="col-sm-3">Roles</dt>
+            <dd class="col-sm-9"><a href="{{ url_for('role.list', organisation_id=organisation.id) }}">{{ organisation.roles }}</a></dd>
+
+            <dt class="col-sm-3">People</dt>
+            <dd class="col-sm-9"><a href="{{ url_for('person.list', organisation_id=organisation.id) }}">{{ organisation.people }}</a></dd>
+
+            <dt class="col-sm-3">Programmes</dt>
+            <dd class="col-sm-9"><a href="{{ url_for('programme.list', organisation_id=organisation.id) }}">{{ organisation.programmes }}</a></dd>
+
+            <dt class="col-sm-3">Projects</dt>
+            <dd class="col-sm-9"><a href="">{{ organisation.projects }}</a></dd>
 
             <dt class="col-sm-3">Created</dt>
             <dd class="col-sm-9">{{ organisation.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
