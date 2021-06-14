@@ -330,7 +330,7 @@ class Project(FluxAPI):
     def list(self, organisation_id, **kwargs):
         """Get a list of Projects."""
         if kwargs:
-            args = {"name": kwargs.get("name", "")}
+            args = {"name": kwargs.get("name", ""), "programme_id": kwargs.get("programme_id", "")}
             qs = urlencode(args)
             url = "{0}/{1}/organisations/{2}/projects?{3}".format(self.url, self.version, organisation_id, qs)
         else:

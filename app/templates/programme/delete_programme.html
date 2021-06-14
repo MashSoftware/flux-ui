@@ -20,7 +20,7 @@
             <dd class="col-sm-9">{% if programme.manager %}<a href="{{ url_for('person.view', organisation_id=programme.organisation.id, person_id=programme.manager.id) }}">{{ programme.manager.name }}</a>{% else %}None{% endif %}</dd>
             
             <dt class="col-sm-3">Projects</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('project.list', organisation_id=programme.organisation.id) }}">{{ programme.projects }}</a></dd>
+            <dd class="col-sm-9"><a href="{{ url_for('project.list', organisation_id=programme.organisation.id, programme_id=programme.id) }}">{{ programme.projects }}</a></dd>
 
             <dt class="col-sm-3">Created</dt>
             <dd class="col-sm-9">{{ programme.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
