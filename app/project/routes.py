@@ -45,6 +45,7 @@ def create(organisation_id):
             name=form.name.data,
             manager_id=form.manager.data,
             programme_id=form.programme.data,
+            status=form.status.data,
         )
         flash(
             "<a href='{}' class='alert-link'>{}</a> has been created.".format(
@@ -101,6 +102,7 @@ def edit(organisation_id, project_id):
             name=form.name.data,
             manager_id=form.manager.data,
             programme_id=form.programme.data,
+            status=form.status.data,
         )
         flash(
             "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
@@ -118,6 +120,7 @@ def edit(organisation_id, project_id):
         form.name.data = project["name"]
         if project["manager"]:
             form.manager.data = project["manager"]["id"]
+        form.status.data = project["status"]
 
     return render_template(
         "update_project.html",

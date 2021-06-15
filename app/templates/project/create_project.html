@@ -58,6 +58,34 @@
                     {{ form.programme(class="form-select") }}
                 {% endif %}
             </div>
+            <div class="mb-3">
+                {{ form.status.label(class="form-label") }}
+                {% if form.errors %}
+                    {% if form.status.errors %}
+                        {% for subfield in form.status %}
+                        <div class="form-check mb-3">
+                            {{ subfield(class="form-check-input is-invalid", type="radio") }}
+                            {{ subfield.label(class="form-check-label") }}
+                            {% for error in form.status.errors %}<div class="invalid-feedback">{{error}}</div>{% endfor %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        {% for subfield in form.status %}
+                        <div class="form-check">
+                            {{ subfield(class="form-check-input is-valid", type="radio") }}
+                            {{ subfield.label(class="form-check-label") }}
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    {% for subfield in form.status %}
+                    <div class="form-check">
+                        {{ subfield(class="form-check-input", type="radio") }}
+                        {{ subfield.label(class="form-check-label") }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
             <div class="d-grid gap-2 d-sm-block">
                 <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Save</button>
             </div>

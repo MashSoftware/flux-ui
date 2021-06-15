@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, SelectField
+from wtforms.fields import RadioField, SelectField, StringField
 from wtforms.validators import InputRequired, Optional
 
 
@@ -19,4 +19,10 @@ class ProjectForm(FlaskForm):
         validators=[Optional()],
         description="The programme to which this project belongs",
         choices=[("", "None")],
+    )
+    status = RadioField(
+        "Status",
+        validators=[InputRequired(message="Select a status")],
+        description="The current status of the project",
+        choices=[("active", "Active"), ("paused", "Paused"), ("closed", "Closed")],
     )

@@ -296,11 +296,11 @@ class Programme(FluxAPI):
 
 
 class Project(FluxAPI):
-    def create(self, name, manager_id, programme_id, organisation_id):
+    def create(self, name, manager_id, programme_id, status, organisation_id):
         """Create a new Project."""
         url = "{0}/{1}/organisations/{2}/projects".format(self.url, self.version, organisation_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        new_project = {"name": name, "programme_id": programme_id}
+        new_project = {"name": name, "programme_id": programme_id, "status": status}
         if manager_id:
             new_project["manager_id"] = manager_id
 
@@ -330,7 +330,10 @@ class Project(FluxAPI):
     def list(self, organisation_id, **kwargs):
         """Get a list of Projects."""
         if kwargs:
-            args = {"name": kwargs.get("name", ""), "programme_id": kwargs.get("programme_id", "")}
+            args = {
+                "name": kwargs.get("name", ""),
+                "programme_id": kwargs.get("programme_id", ""),
+            }
             qs = urlencode(args)
             url = "{0}/{1}/organisations/{2}/projects?{3}".format(self.url, self.version, organisation_id, qs)
         else:
@@ -378,11 +381,11 @@ class Project(FluxAPI):
             else:
                 raise InternalServerError
 
-    def edit(self, project_id, name, manager_id, programme_id, organisation_id):
+    def edit(self, project_id, name, manager_id, programme_id, status, organisation_id):
         """Edit a Project with a specific ID."""
         url = "{0}/{1}/organisations/{2}/projects/{3}".format(self.url, self.version, organisation_id, project_id)
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
-        changed_project = {"name": name, "programme_id": programme_id}
+        changed_project = {"name": name, "programme_id": programme_id, "status": status}
         if manager_id:
             changed_project["manager_id"] = manager_id
 

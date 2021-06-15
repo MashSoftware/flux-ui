@@ -20,6 +20,9 @@
             <dt class="col-sm-3">Programme</dt>
             <dd class="col-sm-9">{% if project.programme %}<a href="{{ url_for('programme.view', organisation_id=project.organisation.id, programme_id=project.programme.id) }}">{{ project.programme.name }}</a>{% else %}None{% endif %}</dd>
 
+            <dt class="col-sm-3">Status</dt>
+            <dd class="col-sm-9"><span class="badge {% if project.status=='active'%}bg-success{% elif project.status=='paused'%}bg-warning text-dark{% elif project.status=='closed'%}bg-danger{% endif %}">{{ project.status | upper }}</span></dd>
+
             <dt class="col-sm-3">Created</dt>
             <dd class="col-sm-9">{{ project.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
 
