@@ -16,9 +16,6 @@
         <dl class="row">
             <dt class="col-sm-3">Programme manager</dt>
             <dd class="col-sm-9">{% if programme.manager %}<a href="{{ url_for('person.view', organisation_id=programme.organisation.id, person_id=programme.manager.id) }}">{{ programme.manager.name }}</a>{% else %}None{% endif %}</dd>
-            
-            <dt class="col-sm-3">Projects</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('project.list', organisation_id=programme.organisation.id, programme_id=programme.id) }}">{{ programme.projects }}</a></dd>
 
             <dt class="col-sm-3">Created</dt>
             <dd class="col-sm-9">{{ programme.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
@@ -27,7 +24,8 @@
             <dd class="col-sm-9">{{ programme.updated_at.strftime("%d/%m/%Y %H:%M:%S") if programme.updated_at else "Never" }}</dd>
         </dl>
         <div class="d-grid gap-2 d-sm-block">
-            <a class="btn btn-primary" href="{{ url_for('programme.edit', organisation_id=programme.organisation.id, programme_id=programme.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>
+            <a class="btn btn-primary" href="{{ url_for('project.list', organisation_id=programme.organisation.id, programme_id=programme.id) }}">View Projects <span class="badge bg-secondary">{{ programme.projects }}</span></a>
+            <a class="btn btn-secondary" href="{{ url_for('programme.edit', organisation_id=programme.organisation.id, programme_id=programme.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>
             <a class="btn btn-danger" href="{{ url_for('programme.delete', organisation_id=programme.organisation.id, programme_id=programme.id) }}"><i class="bi bi-trash"></i> Delete</a>
         </div>
     </div>
