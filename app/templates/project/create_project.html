@@ -6,7 +6,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=organisation.id) }}">{{ organisation.name }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ url_for('programme.list', organisation_id=organisation.id) }}">Programmes</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('project.list', organisation_id=organisation.id) }}">Projects</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Create</li>
             </ol>
         </nav>
