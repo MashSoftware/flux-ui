@@ -15,10 +15,13 @@ from flask import Response, flash, redirect, render_template, request, url_for
 def list(organisation_id):
     """Get a list of People."""
     name_query = request.args.get("name", type=str)
+    role_filter = request.args.get("role_id", type=str)
     organisation = Organisation().get(organisation_id=organisation_id)
 
     if name_query:
         people = Person().list(organisation_id=organisation_id, name=name_query)
+    elif role_filter:
+        people = Person().list(organisation_id=organisation_id, role_id=role_filter)
     else:
         people = Person().list(
             organisation_id=organisation_id,

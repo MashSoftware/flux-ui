@@ -902,7 +902,7 @@ class Person(FluxAPI):
     def list(self, organisation_id, **kwargs):
         """Get a list of People."""
         if kwargs:
-            args = {"name": kwargs.get("name", "")}
+            args = {"name": kwargs.get("name", ""), "role_id": kwargs.get("role_id", "")}
             qs = urlencode(args)
             url = "{0}/{1}/organisations/{2}/people?{3}".format(self.url, self.version, organisation_id, qs)
         else:
