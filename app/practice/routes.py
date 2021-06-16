@@ -1,8 +1,11 @@
+import csv
+from io import StringIO
+
 from app import csrf
 from app.integrations.flux_api import Organisation, Person, Practice
 from app.practice import practice
 from app.practice.forms import PracticeForm
-from flask import flash, redirect, render_template, request, url_for
+from flask import Response, flash, redirect, render_template, request, url_for
 
 
 @practice.route(
@@ -140,3 +143,35 @@ def delete(organisation_id, practice_id):
         Practice().delete(organisation_id=organisation_id, practice_id=practice_id)
         flash("{} has been deleted.".format(practice["name"]), "success")
         return redirect(url_for("practice.list", organisation_id=organisation_id))
+
+
+@practice.route("/<uuid:organisation_id>/practices/download", methods=["GET"])
+def download(organisation_id):
+    """Download a list of Practices in an Organisation in CSV format."""
+    practices = Practice().list(organisation_id=organisation_id)
+
+    def generate():
+        data = StringIO()
+        w = csv.writer(data)
+
+        # write header
+        w.writerow(("name", "head"))
+        yield data.getvalue()
+        data.seek(0)
+        data.truncate(0)
+
+        # write each item
+        for practice in practices:
+            w.writerow(
+                (
+                    practice["name"],
+                    practice["head"]["name"] if practice["head"] else None,
+                )
+            )
+            yield data.getvalue()
+            data.seek(0)
+            data.truncate(0)
+
+    response = Response(generate(), mimetype="text/csv")
+    response.headers.set("Content-Disposition", "attachment", filename="practices.csv")
+    return response
