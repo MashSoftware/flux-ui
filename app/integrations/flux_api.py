@@ -743,7 +743,11 @@ class Role(FluxAPI):
     def list(self, organisation_id, **kwargs):
         """Get a list of Roles."""
         if kwargs:
-            args = {"title": kwargs.get("title", "")}
+            args = {
+                "title": kwargs.get("title", ""),
+                "grade_id": kwargs.get("grade_id", ""),
+                "practice_id": kwargs.get("practice_id", ""),
+            }
             qs = urlencode(args)
             url = "{0}/{1}/organisations/{2}/roles?{3}".format(self.url, self.version, organisation_id, qs)
         else:
