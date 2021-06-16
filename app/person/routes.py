@@ -1,8 +1,11 @@
+import csv
+from io import StringIO
+
 from app import csrf
 from app.integrations.flux_api import Organisation, Person, Role
 from app.person import person
 from app.person.forms import PersonForm
-from flask import flash, redirect, render_template, request, url_for
+from flask import Response, flash, redirect, render_template, request, url_for
 
 
 @person.route(
@@ -157,3 +160,44 @@ def delete(organisation_id, person_id):
         Person().delete(organisation_id=organisation_id, person_id=person_id)
         flash("{} has been deleted.".format(person["name"]), "success")
         return redirect(url_for("person.list", organisation_id=organisation_id))
+
+
+@person.route("/<uuid:organisation_id>/people/download", methods=["GET"])
+def download(organisation_id):
+    """Download a list of People in an Organisation in CSV format."""
+    people = Person().list(organisation_id=organisation_id)
+
+    def generate():
+        data = StringIO()
+        w = csv.writer(data)
+
+        # write header
+        w.writerow(
+            (
+                "name",
+                "role",
+                "grade",
+                "practice",
+            )
+        )
+        yield data.getvalue()
+        data.seek(0)
+        data.truncate(0)
+
+        # write each item
+        for person in people:
+            w.writerow(
+                (
+                    person["name"],
+                    person["role"]["title"] if person["role"] else None,
+                    person["role"]["grade"]["name"] if person["role"] else None,
+                    person["role"]["practice"]["name"] if person["role"]["practice"] else None,
+                )
+            )
+            yield data.getvalue()
+            data.seek(0)
+            data.truncate(0)
+
+    response = Response(generate(), mimetype="text/csv")
+    response.headers.set("Content-Disposition", "attachment", filename="people.csv")
+    return response
