@@ -13,12 +13,15 @@ def list(organisation_id):
     """Get a list of Projects in an Organisation."""
     name_query = request.args.get("name", type=str)
     programme_filter = request.args.get("programme_id", type=str)
+    status_filter = request.args.get("status", type=str)
     organisation = Organisation().get(organisation_id=organisation_id)
 
     if name_query:
         projects = Project().list(organisation_id=organisation_id, name=name_query)
     elif programme_filter:
         projects = Project().list(organisation_id=organisation_id, programme_id=programme_filter)
+    elif status_filter:
+        projects= Project().list(organisation_id=organisation_id, status=status_filter)
     else:
         projects = Project().list(organisation_id=organisation_id)
 

@@ -333,6 +333,7 @@ class Project(FluxAPI):
             args = {
                 "name": kwargs.get("name", ""),
                 "programme_id": kwargs.get("programme_id", ""),
+                "status": kwargs.get("status", "")
             }
             qs = urlencode(args)
             url = "{0}/{1}/organisations/{2}/projects?{3}".format(self.url, self.version, organisation_id, qs)
