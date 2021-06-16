@@ -155,7 +155,7 @@ def download(organisation_id):
         w = csv.writer(data)
 
         # write header
-        w.writerow(("name", "head"))
+        w.writerow(("NAME", "HEAD"))
         yield data.getvalue()
         data.seek(0)
         data.truncate(0)

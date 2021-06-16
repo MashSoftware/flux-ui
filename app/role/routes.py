@@ -181,9 +181,9 @@ def download(organisation_id):
         # write header
         w.writerow(
             (
-                "title",
-                "grade",
-                "practice"
+                "TITLE",
+                "GRADE",
+                "PRACTICE"
             )
         )
         yield data.getvalue()

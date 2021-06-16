@@ -166,10 +166,10 @@ def download(organisation_id):
         # write header
         w.writerow(
             (
-                "name",
-                "manager",
-                "programme",
-                "status",
+                "NAME",
+                "MANAGER",
+                "PROGRAMME",
+                "STATUS",
             )
         )
         yield data.getvalue()
