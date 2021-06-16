@@ -1,8 +1,11 @@
+import csv
+from io import StringIO
+
 from app import csrf
 from app.grade import grade
 from app.grade.forms import GradeForm
 from app.integrations.flux_api import Grade, Organisation
-from flask import flash, redirect, render_template, request, url_for
+from flask import Response, flash, redirect, render_template, request, url_for
 
 
 @grade.route("/<uuid:organisation_id>/grades", methods=["GET", "POST"])
@@ -118,3 +121,30 @@ def delete(organisation_id, grade_id):
         Grade().delete(organisation_id=organisation_id, grade_id=grade_id)
         flash("{} has been deleted.".format(grade["name"]), "success")
         return redirect(url_for("grade.list", organisation_id=organisation_id))
+
+
+@grade.route("/<uuid:organisation_id>/grades/download", methods=["GET"])
+def download(organisation_id):
+    """Download a list of Grades in an Organisation in CSV format."""
+    grades = Grade().list(organisation_id=organisation_id)
+
+    def generate():
+        data = StringIO()
+        w = csv.writer(data)
+
+        # write header
+        w.writerow(("id", "name"))
+        yield data.getvalue()
+        data.seek(0)
+        data.truncate(0)
+
+        # write each item
+        for grade in grades:
+            w.writerow((grade["id"], grade["name"]))
+            yield data.getvalue()
+            data.seek(0)
+            data.truncate(0)
+
+    response = Response(generate(), mimetype="text/csv")
+    response.headers.set("Content-Disposition", "attachment", filename="grades.csv")
+    return response
