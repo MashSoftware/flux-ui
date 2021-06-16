@@ -1,8 +1,11 @@
+import csv
+from io import StringIO
+
 from app import csrf
 from app.integrations.flux_api import Organisation, Person, Programme, Project
 from app.project import project
 from app.project.forms import ProjectForm
-from flask import flash, redirect, render_template, request, url_for
+from flask import Response, flash, redirect, render_template, request, url_for
 
 
 @project.route("/<uuid:organisation_id>/projects/", methods=["GET", "POST"])
@@ -149,3 +152,44 @@ def delete(organisation_id, project_id):
         Project().delete(organisation_id=organisation_id, project_id=project_id)
         flash("{} has been deleted.".format(project["name"]), "success")
         return redirect(url_for("project.list", organisation_id=organisation_id))
+
+
+@project.route("/<uuid:organisation_id>/projects/download", methods=["GET"])
+def download(organisation_id):
+    """Download a list of Projects in an Organisation in CSV format."""
+    projects = Project().list(organisation_id=organisation_id)
+
+    def generate():
+        data = StringIO()
+        w = csv.writer(data)
+
+        # write header
+        w.writerow(
+            (
+                "name",
+                "manager",
+                "programme",
+                "status",
+            )
+        )
+        yield data.getvalue()
+        data.seek(0)
+        data.truncate(0)
+
+        # write each item
+        for project in projects:
+            w.writerow(
+                (
+                    project["name"],
+                    project["manager"]["name"] if project["manager"] else None,
+                    project["programme"]["name"] if project["programme"] else None,
+                    project["status"],
+                )
+            )
+            yield data.getvalue()
+            data.seek(0)
+            data.truncate(0)
+
+    response = Response(generate(), mimetype="text/csv")
+    response.headers.set("Content-Disposition", "attachment", filename="projects.csv")
+    return response
