@@ -12,10 +12,16 @@ from flask import flash, redirect, render_template, request, url_for
 def list(organisation_id):
     """Get a list of Roles."""
     title_query = request.args.get("title", type=str)
+    grade_filter = request.args.get("grade_id", type=str)
+    practice_filter = request.args.get("practice_id", type=str)
     organisation = Organisation().get(organisation_id=organisation_id)
 
     if title_query:
         roles = Role().list(organisation_id=organisation_id, title=title_query)
+    elif grade_filter:
+        roles = Role().list(organisation_id=organisation_id, grade_id=grade_filter)
+    elif practice_filter:
+        roles = Role().list(organisation_id=organisation_id, practice_id=practice_filter)
     else:
         roles = Role().list(
             organisation_id=organisation_id,
