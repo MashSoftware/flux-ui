@@ -1,8 +1,11 @@
+import csv
+from io import StringIO
+
 from app import csrf
 from app.integrations.flux_api import Grade, Organisation, Practice, Role
 from app.role import role
 from app.role.forms import RoleForm
-from flask import flash, redirect, render_template, request, url_for
+from flask import Response, flash, redirect, render_template, request, url_for
 
 
 @role.route(
@@ -164,3 +167,42 @@ def delete(organisation_id, role_id):
         Role().delete(organisation_id=organisation_id, role_id=role_id)
         flash("{} has been deleted.".format(role["title"]), "success")
         return redirect(url_for("role.list", organisation_id=organisation_id))
+
+
+@role.route("/<uuid:organisation_id>/roles/download", methods=["GET"])
+def download(organisation_id):
+    """Download a list of Roles in an Organisation in CSV format."""
+    roles = Role().list(organisation_id=organisation_id)
+
+    def generate():
+        data = StringIO()
+        w = csv.writer(data)
+
+        # write header
+        w.writerow(
+            (
+                "title",
+                "grade",
+                "practice"
+            )
+        )
+        yield data.getvalue()
+        data.seek(0)
+        data.truncate(0)
+
+        # write each item
+        for role in roles:
+            w.writerow(
+                (
+                    role["title"],
+                    role["grade"]["name"],
+                    role["practice"]["name"] if role["practice"] else None
+                )
+            )
+            yield data.getvalue()
+            data.seek(0)
+            data.truncate(0)
+
+    response = Response(generate(), mimetype="text/csv")
+    response.headers.set("Content-Disposition", "attachment", filename="roles.csv")
+    return response
