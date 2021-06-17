@@ -133,14 +133,14 @@ def download(organisation_id):
         w = csv.writer(data)
 
         # write header
-        w.writerow(("ID", "NAME"))
+        w.writerow(("NAME",))
         yield data.getvalue()
         data.seek(0)
         data.truncate(0)
 
         # write each item
         for grade in grades:
-            w.writerow((grade["id"], grade["name"]))
+            w.writerow((grade["name"],))
             yield data.getvalue()
             data.seek(0)
             data.truncate(0)
