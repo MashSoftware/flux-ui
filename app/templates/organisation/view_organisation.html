@@ -23,73 +23,55 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <div class="col">
                 <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Grades</h5>
-                        <p class="card-text text-center display-3">{{ organisation.grades }}</p>
-                        <div class="text-center">
-                            <a href="{{ url_for('grade.list', organisation_id=organisation.id) }}" class="card-link">View grades</a>
-                            <a href="{{ url_for('grade.create', organisation_id=organisation.id) }}" class="card-link">New grade</a>
-                        </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Grades</h5>
+                        <p class="card-text display-3"><a href="{{ url_for('grade.list', organisation_id=organisation.id) }}">{{ organisation.grades }}</a></p>
+                        <a href="{{ url_for('grade.create', organisation_id=organisation.id) }}" class="card-link"><i class="bi bi-plus-lg"></i> New grade</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Practices</h5>
-                        <p class="card-text text-center display-3">{{ organisation.practices }}</p>
-                        <div class="text-center">
-                            <a href="{{ url_for('practice.list', organisation_id=organisation.id) }}" class="card-link">View practices</a>
-                            <a href="{{ url_for('practice.create', organisation_id=organisation.id) }}" class="card-link">New practice</a>
-                        </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Practices</h5>
+                        <p class="card-text display-3"><a href="{{ url_for('practice.list', organisation_id=organisation.id) }}">{{ organisation.practices }}</a></p>
+                        <a href="{{ url_for('practice.create', organisation_id=organisation.id) }}" class="card-link"><i class="bi bi-plus-lg"></i> New practice</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Roles</h5>
-                        <p class="card-text text-center display-3">{{ organisation.roles }}</p>
-                        <div class="text-center">
-                            <a href="{{ url_for('role.list', organisation_id=organisation.id) }}" class="card-link">View roles</a>
-                            <a href="{{ url_for('role.create', organisation_id=organisation.id) }}" class="card-link">New role</a>
-                        </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Roles</h5>
+                        <p class="card-text display-3"><a href="{{ url_for('role.list', organisation_id=organisation.id) }}">{{ organisation.roles }}</a></p>
+                        <a href="{{ url_for('role.create', organisation_id=organisation.id) }}" class="card-link"><i class="bi bi-plus-lg"></i> New role</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">People</h5>
-                        <p class="card-text text-center display-3">{{ organisation.people }}</p>
-                        <div class="text-center">
-                            <a href="{{ url_for('person.list', organisation_id=organisation.id) }}" class="card-link">View people</a>
-                            <a href="{{ url_for('person.create', organisation_id=organisation.id) }}" class="card-link">New person</a>
-                        </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">People</h5>
+                        <p class="card-text display-3"><a href="{{ url_for('person.list', organisation_id=organisation.id) }}">{{ organisation.people }}</a></p>
+                        <a href="{{ url_for('person.create', organisation_id=organisation.id) }}" class="card-link"><i class="bi bi-plus-lg"></i> New person</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Programmes</h5>
-                        <p class="card-text text-center display-3">{{ organisation.programmes }}</p>
-                        <div class="text-center">
-                            <a href="{{ url_for('programme.list', organisation_id=organisation.id) }}" class="card-link">View programmes</a>
-                            <a href="{{ url_for('programme.create', organisation_id=organisation.id) }}" class="card-link">New programme</a>
-                        </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Programmes</h5>
+                        <p class="card-text display-3"><a href="{{ url_for('programme.list', organisation_id=organisation.id) }}">{{ organisation.programmes }}</a></p>
+                        <a href="{{ url_for('programme.create', organisation_id=organisation.id) }}" class="card-link"><i class="bi bi-plus-lg"></i> New programme</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Projects</h5>
-                        <p class="card-text text-center display-3">{{ organisation.projects }}</p>
-                        <div class="text-center">
-                            <a href="{{ url_for('project.list', organisation_id=organisation.id) }}" class="card-link">View projects</a>
-                            <a href="{{ url_for('project.create', organisation_id=organisation.id) }}" class="card-link">New project</a>
-                        </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Projects</h5>
+                        <p class="card-text display-3"><a href="{{ url_for('project.list', organisation_id=organisation.id) }}">{{ organisation.projects }}</a></p>
+                        <a href="{{ url_for('project.create', organisation_id=organisation.id) }}" class="card-link"><i class="bi bi-plus-lg"></i> New project</a>
                     </div>
                 </div>
             </div>
