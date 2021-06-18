@@ -47,6 +47,8 @@ def create(organisation_id):
     if roles:
         form.role.choices = [(role["id"], role["title"]) for role in roles]
 
+    form.email_address.data = f"@{organisation['domain']}"
+
     if form.validate_on_submit():
         new_person = Person().create(
             name=form.name.data,
