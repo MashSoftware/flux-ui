@@ -2,36 +2,13 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
-            </ol>
-        </nav>
         {{ super() }}
+        <p class="h4 text-muted mb-0">Organisation</p>
         <h1>{{ title }}</h1>
         <hr>
         <dl class="row">
             <dt class="col-sm-3">Domain</dt>
             <dd class="col-sm-9">{{ organisation.domain }}</dd>
-            
-            <dt class="col-sm-3">Grades</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('grade.list', organisation_id=organisation.id) }}">{{ organisation.grades }}</a></dd>
-
-            <dt class="col-sm-3">Practices</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('practice.list', organisation_id=organisation.id) }}">{{ organisation.practices }}</a></dd>
-
-            <dt class="col-sm-3">Roles</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('role.list', organisation_id=organisation.id) }}">{{ organisation.roles }}</a></dd>
-
-            <dt class="col-sm-3">People</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('person.list', organisation_id=organisation.id) }}">{{ organisation.people }}</a></dd>
-
-            <dt class="col-sm-3">Programmes</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('programme.list', organisation_id=organisation.id) }}">{{ organisation.programmes }}</a></dd>
-
-            <dt class="col-sm-3">Projects</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('project.list', organisation_id=organisation.id) }}">{{ organisation.projects }}</a></dd>
 
             <dt class="col-sm-3">Created</dt>
             <dd class="col-sm-9">{{ organisation.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
@@ -39,9 +16,83 @@
             <dt class="col-sm-3">Last updated</dt>
             <dd class="col-sm-9">{{ organisation.updated_at.strftime("%d/%m/%Y %H:%M:%S") if organisation.updated_at else "Never" }}</dd>
         </dl>
-        <div class="d-grid gap-2 d-sm-block">
+        <div class="d-grid gap-2 d-sm-block mb-3">
             <a class="btn btn-secondary" href="{{ url_for('organisation.edit', organisation_id=organisation.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>
             <a class="btn btn-danger" href="{{ url_for('organisation.delete', organisation_id=organisation.id) }}"><i class="bi bi-trash"></i> Delete</a>
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Grades</h5>
+                        <p class="card-text text-center display-3">{{ organisation.grades }}</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('grade.list', organisation_id=organisation.id) }}" class="card-link">View grades</a>
+                            <a href="{{ url_for('grade.create', organisation_id=organisation.id) }}" class="card-link">New grade</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Practices</h5>
+                        <p class="card-text text-center display-3">{{ organisation.practices }}</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('practice.list', organisation_id=organisation.id) }}" class="card-link">View practices</a>
+                            <a href="{{ url_for('practice.create', organisation_id=organisation.id) }}" class="card-link">New practice</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Roles</h5>
+                        <p class="card-text text-center display-3">{{ organisation.roles }}</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('role.list', organisation_id=organisation.id) }}" class="card-link">View roles</a>
+                            <a href="{{ url_for('role.create', organisation_id=organisation.id) }}" class="card-link">New role</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">People</h5>
+                        <p class="card-text text-center display-3">{{ organisation.people }}</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('person.list', organisation_id=organisation.id) }}" class="card-link">View people</a>
+                            <a href="{{ url_for('person.create', organisation_id=organisation.id) }}" class="card-link">New person</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Programmes</h5>
+                        <p class="card-text text-center display-3">{{ organisation.programmes }}</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('programme.list', organisation_id=organisation.id) }}" class="card-link">View programmes</a>
+                            <a href="{{ url_for('programme.create', organisation_id=organisation.id) }}" class="card-link">New programme</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Projects</h5>
+                        <p class="card-text text-center display-3">{{ organisation.projects }}</p>
+                        <div class="text-center">
+                            <a href="{{ url_for('project.list', organisation_id=organisation.id) }}" class="card-link">View projects</a>
+                            <a href="{{ url_for('project.create', organisation_id=organisation.id) }}" class="card-link">New project</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
