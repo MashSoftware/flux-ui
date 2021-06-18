@@ -4,7 +4,6 @@
     <div class="col-md-8">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=project.organisation.id) }}">{{ project.organisation.name }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('project.list', organisation_id=project.organisation.id) }}">Projects</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('project.view', organisation_id=project.organisation.id, project_id=project.id) }}">{{ project.name }}</a></li>
@@ -12,6 +11,7 @@
             </ol>
         </nav>
         {{ super() }}
+        <p class="h4 text-muted mb-0">Project</p>
         <h1>{{title}}</h1>
         <hr>
         <p class="lead">Are you sure you want to delete {{ project.name }}?</p>

@@ -4,12 +4,12 @@
     <div class="col-md-8">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ url_for('organisation.list') }}">Organisations</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=organisation.id) }}">{{ organisation.name }}</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Edit</li>
             </ol>
         </nav>
         {{ super() }}
+        <p class="h4 text-muted mb-0">Organisation</p>
         <h1>{{title}}</h1>
         <hr>
         <form action="" method="post" novalidate>
