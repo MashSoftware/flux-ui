@@ -51,27 +51,6 @@
             </tbody>
         </table>
 
-        <h2>Analytics cookies</h2>
-        <p>With your permission, we use Google Analytics to collect data about how you use this service. This
-            information helps us to improve our service.</p>
-        <p>Google is not allowed to use or share our analytics data with anyone.</p>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Purpose</th>
-                    <th scope="col">Expires</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><code>foo</code></td>
-                    <td>bar</td>
-                    <td>baz</td>
-                </tr>
-            </tbody>
-        </table>
-
         <h2>Change your cookie settings</h2>
         <form action="" method="post" novalidate>
             {{ form.csrf_token }}
@@ -103,36 +82,8 @@
                     {% endfor %}
                 {% endif %}
             </div>
-            <div class="mb-3">
-                {{ form.analytics.label(class="form-label") }}
-                {% if form.errors %}
-                    {% if form.analytics.errors %}
-                        {% for subfield in form.analytics %}
-                        <div class="form-check">
-                            {{ subfield(class="form-check-input is-invalid", type="radio") }}
-                            {{ subfield.label(class="form-check-label") }}
-                        </div>
-                        {% endfor %}
-                        {% for error in form.analytics.errors %}<div class="invalid-feedback">{{error}}</div>{% endfor %}
-                    {% else %}
-                        {% for subfield in form.analytics %}
-                        <div class="form-check">
-                            {{ subfield(class="form-check-input is-valid", type="radio") }}
-                            {{ subfield.label(class="form-check-label") }}
-                        </div>
-                        {% endfor %}
-                    {% endif %}
-                {% else %}
-                    {% for subfield in form.analytics %}
-                    <div class="form-check">
-                        {{ subfield(class="form-check-input", type="radio") }}
-                        {{ subfield.label(class="form-check-label") }}
-                    </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
             <div class="d-grid gap-2 d-sm-block">
-                {{ form.save(class="btn btn-primary") }}
+                <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Save cookie settings</button>
             </div>
         </form>
     </div>

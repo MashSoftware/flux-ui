@@ -22,12 +22,11 @@ def index():
 def cookies():
     form = CookiesForm()
     # Default cookies policy to reject all categories of cookie
-    cookies_policy = {"functional": "no", "analytics": "no"}
+    cookies_policy = {"functional": "no"}
 
     if form.validate_on_submit():
         # Update cookies policy consent from form data
         cookies_policy["functional"] = form.functional.data
-        cookies_policy["analytics"] = form.analytics.data
 
         # Create flash message confirmation before rendering template
         flash("You’ve set your cookie preferences.", "success")
@@ -43,11 +42,9 @@ def cookies():
             # Set cookie consent radios to current consent
             cookies_policy = json.loads(request.cookies.get("cookies_policy"))
             form.functional.data = cookies_policy["functional"]
-            form.analytics.data = cookies_policy["analytics"]
         else:
             # If conset not previously set, use default "no" policy
             form.functional.data = cookies_policy["functional"]
-            form.analytics.data = cookies_policy["analytics"]
     return render_template("cookies.html", form=form)
 
 
