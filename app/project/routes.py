@@ -21,7 +21,7 @@ def list(organisation_id):
     elif programme_filter:
         projects = Project().list(organisation_id=organisation_id, programme_id=programme_filter)
     elif status_filter:
-        projects= Project().list(organisation_id=organisation_id, status=status_filter)
+        projects = Project().list(organisation_id=organisation_id, status=status_filter)
     else:
         projects = Project().list(organisation_id=organisation_id)
 

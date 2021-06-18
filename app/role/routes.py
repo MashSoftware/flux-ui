@@ -179,13 +179,7 @@ def download(organisation_id):
         w = csv.writer(data)
 
         # write header
-        w.writerow(
-            (
-                "TITLE",
-                "GRADE",
-                "PRACTICE"
-            )
-        )
+        w.writerow(("TITLE", "GRADE", "PRACTICE"))
         yield data.getvalue()
         data.seek(0)
         data.truncate(0)
@@ -196,7 +190,7 @@ def download(organisation_id):
                 (
                     role["title"],
                     role["grade"]["name"],
-                    role["practice"]["name"] if role["practice"] else None
+                    role["practice"]["name"] if role["practice"] else None,
                 )
             )
             yield data.getvalue()

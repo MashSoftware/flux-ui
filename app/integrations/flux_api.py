@@ -333,7 +333,7 @@ class Project(FluxAPI):
             args = {
                 "name": kwargs.get("name", ""),
                 "programme_id": kwargs.get("programme_id", ""),
-                "status": kwargs.get("status", "")
+                "status": kwargs.get("status", ""),
             }
             qs = urlencode(args)
             url = "{0}/{1}/organisations/{2}/projects?{3}".format(self.url, self.version, organisation_id, qs)
@@ -902,7 +902,10 @@ class Person(FluxAPI):
     def list(self, organisation_id, **kwargs):
         """Get a list of People."""
         if kwargs:
-            args = {"name": kwargs.get("name", ""), "role_id": kwargs.get("role_id", "")}
+            args = {
+                "name": kwargs.get("name", ""),
+                "role_id": kwargs.get("role_id", ""),
+            }
             qs = urlencode(args)
             url = "{0}/{1}/organisations/{2}/people?{3}".format(self.url, self.version, organisation_id, qs)
         else:
