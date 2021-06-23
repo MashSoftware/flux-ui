@@ -38,14 +38,14 @@
                 <thead>
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col" class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for grade in grades %}
                     <tr>
                         <th scope="row"><a href="{{ url_for('grade.view', organisation_id=organisation.id, grade_id=grade.id) }}">{{ grade.name }}</a></th>
-                        <td><a href="{{ url_for('grade.edit', organisation_id=organisation.id, grade_id=grade.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('grade.delete', organisation_id=organisation.id, grade_id=grade.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
+                        <td class="text-end"><a href="{{ url_for('grade.edit', organisation_id=organisation.id, grade_id=grade.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('grade.delete', organisation_id=organisation.id, grade_id=grade.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
