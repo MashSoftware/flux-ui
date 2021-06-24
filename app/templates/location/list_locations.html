@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=organisation.id) }}">{{ organisation.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <h1>{{title}}</h1>
+        <hr>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="d-grid gap-2 d-sm-block">
+            <a class="btn btn-primary" href="{{ url_for('location.create', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New location</a>
+            <a class="btn btn-secondary" href="{{ url_for('location.download', organisation_id=organisation.id) }}"><i class="bi bi-download"></i> Download</a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <form action="" method="get" novalidate>
+            <div class="input-group mb-3">
+                <input type="search" name="name" value="{{ request.args.name }}" class="form-control" aria-label="Search" aria-describedby="button-addon">
+                <button class="btn btn-primary" type="submit" id="button-addon" aria-label="Search"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <p class="lead">{{ locations|length if locations else 0 }} locations{% if request.args.name %} containing "{{ request.args.name }}"{% endif %}</p>
+        {% if locations %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col" class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for location in locations %}
+                            <tr>
+                                <th scope="row"><a href="{{ url_for('location.view', organisation_id=organisation.id, location_id=location.id) }}">{{ location.name }}</a></th>
+                                <td class="text-end"><a href="{{ url_for('location.edit', organisation_id=organisation.id, location_id=location.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('location.delete', organisation_id=organisation.id, location_id=location.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

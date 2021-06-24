@@ -51,6 +51,15 @@
             <div class="col">
                 <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
+                        <h5 class="card-title">Locations</h5>
+                        <p class="card-text display-3"><a href="{{ url_for('location.list', organisation_id=organisation.id) }}">{{ organisation.locations }}</a></p>
+                        <a class="btn btn-primary" href="{{ url_for('location.create', organisation_id=organisation.id) }}" role="button"><i class="bi bi-plus-lg"></i> New location</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
                         <h5 class="card-title">People</h5>
                         <p class="card-text display-3"><a href="{{ url_for('person.list', organisation_id=organisation.id) }}">{{ organisation.people }}</a></p>
                         <a class="btn btn-primary" href="{{ url_for('person.create', organisation_id=organisation.id) }}" role="button"><i class="bi bi-plus-lg"></i> New person</a>

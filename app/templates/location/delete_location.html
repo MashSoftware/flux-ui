@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=location.organisation.id) }}">{{ location.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('location.list', organisation_id=location.organisation.id) }}">Locations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('location.view', organisation_id=location.organisation.id, location_id=location.id) }}">{{ location.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Delete</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <p class="h4 text-muted mb-0">Location</p>
+        <h1>{{title}}</h1>
+        <hr>
+        <p class="lead">Are you sure you want to delete {{ location.name }}?</p>
+        <dl class="row">
+            <dt class="col-sm-3">Address</dt>
+            <dd class="col-sm-9">{{ location.address }}</dd>
+
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">{{ location.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+            <dt class="col-sm-3">Last updated</dt>
+            <dd class="col-sm-9">{{ location.updated_at.strftime("%d/%m/%Y %H:%M:%S") if location.updated_at else "Never" }}</dd>
+        </dl>
+        <form action="" method="post" novalidate>
+            <div class="d-grid gap-2 d-sm-block">
+                <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i> Yes, delete {{ location.name }}</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -858,7 +858,7 @@ class Person(FluxAPI):
         role_id,
         email_address,
         full_time_equivalent,
-        location,
+        location_id,
         employment,
         organisation_id,
     ):
@@ -870,7 +870,7 @@ class Person(FluxAPI):
             "role_id": role_id,
             "email_address": email_address,
             "full_time_equivalent": float(full_time_equivalent),
-            "location": location,
+            "location_id": location_id,
             "employment": employment,
         }
 
@@ -905,6 +905,7 @@ class Person(FluxAPI):
             args = {
                 "name": kwargs.get("name", ""),
                 "role_id": kwargs.get("role_id", ""),
+                "location_id": kwargs.get("location_id", ""),
             }
             qs = urlencode(args)
             url = f"{self.url}/{self.version}/organisations/{organisation_id}/people?{qs}"
@@ -960,7 +961,7 @@ class Person(FluxAPI):
         role_id,
         email_address,
         full_time_equivalent,
-        location,
+        location_id,
         employment,
         organisation_id,
     ):
@@ -972,7 +973,7 @@ class Person(FluxAPI):
             "role_id": role_id,
             "email_address": email_address,
             "full_time_equivalent": float(full_time_equivalent),
-            "location": location,
+            "location_id": location_id,
             "employment": employment,
         }
 
@@ -1004,6 +1005,142 @@ class Person(FluxAPI):
     def delete(self, person_id, organisation_id):
         """Delete a Person with a specific ID."""
         url = f"{self.url}/{self.version}/organisations/{organisation_id}/people/{person_id}"
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.delete(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 204:
+                return None
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+
+class Location(FluxAPI):
+    def create(self, name, address, organisation_id):
+        """Create a new Location."""
+        url = f"{self.url}/{self.version}/organisations/{organisation_id}/locations"
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        new_location = {"name": name, "address": address}
+
+        try:
+            response = requests.post(
+                url,
+                data=json.dumps(new_location),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 201:
+                location = json.loads(response.text)
+                location["created_at"] = datetime.strptime(location["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if location["updated_at"]:
+                    location["updated_at"] = datetime.strptime(location["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return location
+            elif response.status_code == 409:
+                raise Conflict
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def list(self, organisation_id, **kwargs):
+        """Get a list of Locations."""
+        if kwargs:
+            args = {"name": kwargs.get("name", "")}
+            qs = urlencode(args)
+            url = f"{self.url}/{self.version}/organisations/{organisation_id}/locations?{qs}"
+        else:
+            url = f"{self.url}/{self.version}/organisations/{organisation_id}/locations"
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                return json.loads(response.text)
+            elif response.status_code == 204:
+                return None
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def get(self, location_id, organisation_id):
+        """Get a Location with a specific ID."""
+        url = f"{self.url}/{self.version}/organisations/{organisation_id}/locations/{location_id}"
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                location = json.loads(response.text)
+                location["created_at"] = datetime.strptime(location["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if location["updated_at"]:
+                    location["updated_at"] = datetime.strptime(location["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return location
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def edit(self, location_id, name, address, organisation_id):
+        """Edit a Location with a specific ID."""
+        url = f"{self.url}/{self.version}/organisations/{organisation_id}/locations/{location_id}"
+        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        changed_location = {"name": name, "address": address}
+
+        try:
+            response = requests.put(
+                url,
+                data=json.dumps(changed_location),
+                headers=headers,
+                timeout=self.timeout,
+            )
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                location = json.loads(response.text)
+                location["created_at"] = datetime.strptime(location["created_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                if location["updated_at"]:
+                    location["updated_at"] = datetime.strptime(location["updated_at"], "%Y-%m-%dT%H:%M:%S.%f%z")
+                return location
+            elif response.status_code == 404:
+                raise NotFound
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
+
+    def delete(self, location_id, organisation_id):
+        """Delete a Location with a specific ID."""
+        url = f"{self.url}/{self.version}/organisations/{organisation_id}/locations/{location_id}"
         headers = {"Accept": "application/json"}
 
         try:

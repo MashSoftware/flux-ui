@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=location.organisation.id) }}">{{ location.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('location.list', organisation_id=location.organisation.id) }}">Locations</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <p class="h4 text-muted mb-0">Location</p>
+        <h1>{{ title }}</h1>
+        <hr>
+        <dl class="row">
+            <dt class="col-sm-3">Address</dt>
+            <dd class="col-sm-9">{{ location.address }}</dd>
+
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">{{ location.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+            <dt class="col-sm-3">Last updated</dt>
+            <dd class="col-sm-9">{{ location.updated_at.strftime("%d/%m/%Y %H:%M:%S") if location.updated_at else "Never" }}</dd>
+        </dl>
+        <div class="d-grid gap-2 d-sm-block">
+            <a class="btn btn-primary" href="{{ url_for('person.list', organisation_id=location.organisation.id, location_id=location.id) }}">View People <span class="badge bg-secondary">{{ location.people }}</span></a>
+            <a class="btn btn-secondary" href="{{ url_for('location.edit', organisation_id=location.organisation.id, location_id=location.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>
+            <a class="btn btn-danger" href="{{ url_for('location.delete', organisation_id=location.organisation.id, location_id=location.id) }}"><i class="bi bi-trash"></i> Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

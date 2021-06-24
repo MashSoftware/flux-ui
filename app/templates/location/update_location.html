@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=location.organisation.id) }}">{{ location.organisation.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('location.list', organisation_id=location.organisation.id) }}">Locations</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('location.view', organisation_id=location.organisation.id, location_id=location.id) }}">{{ location.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            </ol>
+        </nav>
+        {{ super() }}
+        <p class="h4 text-muted mb-0">Location</p>
+        <h1>{{title}}</h1>
+        <hr>
+        <form action="" method="post" novalidate>
+            {{ form.csrf_token }}
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {% if form.errors %}
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="nameHelp nameError") }}
+                        {% for error in form.name.errors %}<div class="invalid-feedback" id="nameError">{{error}}</div>{% endfor %}
+                    {% else %}
+                        {{ form.name(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="nameHelp nameValid") }}
+                        <div class="valid-feedback" id="nameValid">Looks good!</div>
+                    {% endif %}
+                {% else %}
+                    {{ form.name(class="form-control", type="text", spellcheck="true", aria_describedby="nameHelp") }}
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                {{ form.address.label(class="form-label") }}
+                {% if form.errors %}
+                    {% if form.address.errors %}
+                        {{ form.address(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="addressHelp addressError") }}
+                        {% for error in form.address.errors %}<div class="invalid-feedback" id="addressError">{{error}}</div>{% endfor %}
+                    {% else %}
+                        {{ form.address(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="addressHelp addressValid") }}
+                        <div class="valid-feedback" id="addressValid">Looks good!</div>
+                    {% endif %}
+                {% else %}
+                    {{ form.address(class="form-control", type="text", spellcheck="true", aria_describedby="addressHelp") }}
+                {% endif %}
+            </div>
+            <div class="d-grid gap-2 d-sm-block">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
