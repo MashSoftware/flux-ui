@@ -130,7 +130,7 @@ def edit(organisation_id, project_id):
 
     return render_template(
         "update_project.html",
-        title="Edit {}".format(project["name"]),
+        title=f"Edit {project['name']}",
         form=form,
         project=project,
     )
@@ -148,7 +148,7 @@ def delete(organisation_id, project_id):
     if request.method == "GET":
         return render_template(
             "delete_project.html",
-            title="Delete {}".format(project["name"]),
+            title=f"Delete {project['name']}",
             project=project,
         )
     elif request.method == "POST":

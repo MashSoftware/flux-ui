@@ -50,12 +50,12 @@ def cookies():
 
 @main.app_errorhandler(HTTPException)
 def http_exception(error):
-    current_app.logger.error("{}: {} - {}".format(error.code, error.name, request.url))
+    current_app.logger.error(f"{error.code}: {error.name} - {request.url}")
     return render_template("error.html", title=error.name, error=error), error.code
 
 
 @main.app_errorhandler(CSRFError)
 def csrf_error(error):
-    current_app.logger.error("{}: {} - {}".format(error.code, error.description, request.url))
+    current_app.logger.error(f"{error.code}: {error.description} - {request.url}")
     flash("The form you were submitting has expired. Please try again.", "info")
     return redirect(request.full_path)

@@ -96,7 +96,7 @@ def edit(organisation_id, grade_id):
 
     return render_template(
         "grade/edit_grade.html",
-        title="Edit {}".format(grade["name"]),
+        title=f"Edit {grade['name']}",
         form=form,
         grade=grade,
     )
@@ -114,12 +114,12 @@ def delete(organisation_id, grade_id):
     if request.method == "GET":
         return render_template(
             "grade/delete_grade.html",
-            title="Delete {}".format(grade["name"]),
+            title=f"Delete {grade['name']}",
             grade=grade,
         )
     elif request.method == "POST":
         Grade().delete(organisation_id=organisation_id, grade_id=grade_id)
-        flash("{} has been deleted.".format(grade["name"]), "success")
+        flash(f"{grade['name']} has been deleted.", "success")
         return redirect(url_for("grade.list", organisation_id=organisation_id))
 
 

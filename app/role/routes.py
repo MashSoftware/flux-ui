@@ -142,7 +142,7 @@ def edit(organisation_id, role_id):
 
     return render_template(
         "edit_role.html",
-        title="Edit {}".format(role["title"]),
+        title=f"Edit {role['title']}",
         form=form,
         role=role,
     )
@@ -160,7 +160,7 @@ def delete(organisation_id, role_id):
     if request.method == "GET":
         return render_template(
             "delete_role.html",
-            title="Delete {}".format(role["title"]),
+            title=f"Delete {role['title']}",
             role=role,
         )
     elif request.method == "POST":

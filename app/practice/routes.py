@@ -118,7 +118,7 @@ def edit(organisation_id, practice_id):
 
     return render_template(
         "edit_practice.html",
-        title="Edit {}".format(practice["name"]),
+        title=f"Edit {practice['name']}",
         form=form,
         practice=practice,
     )
@@ -136,7 +136,7 @@ def delete(organisation_id, practice_id):
     if request.method == "GET":
         return render_template(
             "delete_practice.html",
-            title="Delete {}".format(practice["name"]),
+            title=f"Delete {practice['name']}",
             practice=practice,
         )
     elif request.method == "POST":
