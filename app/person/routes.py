@@ -16,7 +16,7 @@ def list(organisation_id):
     """Get a list of People."""
     name_query = request.args.get("name", type=str)
     role_filter = request.args.get("role_id", type=str)
-    location_filter =  request.args.get("location_id", type=str)
+    location_filter = request.args.get("location_id", type=str)
     organisation = Organisation().get(organisation_id=organisation_id)
 
     if name_query:
@@ -76,7 +76,7 @@ def create(organisation_id):
         return redirect(url_for("person.list", organisation_id=organisation_id))
     elif request.method == "GET":
         form.email_address.data = f"@{organisation['domain']}"
-    
+
     return render_template(
         "create_person.html",
         title="Create a new person",
@@ -109,7 +109,7 @@ def edit(organisation_id, person_id):
     person = Person().get(organisation_id=organisation_id, person_id=person_id)
     roles = Role().list(organisation_id=organisation_id)
     locations = Location().list(organisation_id=organisation_id)
-    
+
     form = PersonForm()
     form.role.choices = [(role["id"], role["title"]) for role in roles if roles]
     form.location.choices = [(location["id"], location["name"]) for location in locations if locations]
