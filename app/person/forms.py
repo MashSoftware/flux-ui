@@ -34,7 +34,7 @@ class PersonForm(FlaskForm):
             NumberRange(min=0.1, max=1.0),
         ],
     )
-    location = StringField(
+    location = SelectField(
         "Location",
-        validators=[InputRequired(message="Enter a location")],
+        validators=[InputRequired(message="Select a location")],
     )

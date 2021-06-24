@@ -104,14 +104,14 @@
                 {{ form.location.label(class="form-label") }}
                 {% if form.errors %}
                     {% if form.location.errors %}
-                        {{ form.location(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="locationHelp locationError") }}
-                        {% for error in form.location.errors %}<div class="invalid-feedback" id="locationError">{{error}}</div>{% endfor %}
+                        {{ form.location(class="form-select is-invalid", aria_describedby="locationHelp locationError") }}
+                        {% for error in form.location.errors %}<div class="invalid-feedback" id="locationError">{{ error }}</div>{% endfor %}
                     {% else %}
-                        {{ form.location(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="locationHelp locationValid") }}
+                        {{ form.location(class="form-select is-valid", aria_describedby="locationHelp locationError") }}
                         <div class="valid-feedback" id="locationValid">Looks good!</div>
                     {% endif %}
                 {% else %}
-                    {{ form.location(class="form-control", type="text", spellcheck="true", aria_describedby="locationHelp") }}
+                    {{ form.location(class="form-select") }}
                 {% endif %}
             </div>
             <div class="d-grid gap-2 d-sm-block">

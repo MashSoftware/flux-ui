@@ -27,7 +27,7 @@
             <dd class="col-sm-9">{% if person.role.practice %}<a href="{{ url_for('practice.view', organisation_id=person.organisation.id, practice_id=person.role.practice.id) }}">{{ person.role.practice.name }}</a>{% else %}None{% endif %}</dd>
 
             <dt class="col-sm-3">Location</dt>
-            <dd class="col-sm-9">{{ person.location }}</dd>
+            <dd class="col-sm-9"><a href="{{ url_for('location.view', organisation_id=person.organisation.id, location_id=person.location.id) }}">{{ person.location.name }}</a></dd>
 
             <dt class="col-sm-3">Full time equivalent</dt>
             <dd class="col-sm-9">{{ person.full_time_equivalent }}</dd>

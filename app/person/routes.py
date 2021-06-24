@@ -2,7 +2,7 @@ import csv
 from io import StringIO
 
 from app import csrf
-from app.integrations.flux_api import Organisation, Person, Role
+from app.integrations.flux_api import Location, Organisation, Person, Role
 from app.person import person
 from app.person.forms import PersonForm
 from flask import Response, flash, redirect, render_template, request, url_for
@@ -16,12 +16,15 @@ def list(organisation_id):
     """Get a list of People."""
     name_query = request.args.get("name", type=str)
     role_filter = request.args.get("role_id", type=str)
+    location_filter =  request.args.get("location_id", type=str)
     organisation = Organisation().get(organisation_id=organisation_id)
 
     if name_query:
         people = Person().list(organisation_id=organisation_id, name=name_query)
     elif role_filter:
         people = Person().list(organisation_id=organisation_id, role_id=role_filter)
+    elif location_filter:
+        people = Person().list(organisation_id=organisation_id, location_id=location_filter)
     else:
         people = Person().list(
             organisation_id=organisation_id,
@@ -44,10 +47,10 @@ def create(organisation_id):
     form = PersonForm()
     organisation = Organisation().get(organisation_id=organisation_id)
     roles = Role().list(organisation_id=organisation_id)
-    if roles:
-        form.role.choices = [(role["id"], role["title"]) for role in roles]
+    form.role.choices = [(role["id"], role["title"]) for role in roles if roles]
 
-    form.email_address.data = f"@{organisation['domain']}"
+    locations = Location().list(organisation_id=organisation_id)
+    form.location.choices = [(location["id"], location["name"]) for location in locations if locations]
 
     if form.validate_on_submit():
         new_person = Person().create(
@@ -56,7 +59,7 @@ def create(organisation_id):
             role_id=form.role.data,
             employment=form.employment.data,
             full_time_equivalent=form.full_time_equivalent.data,
-            location=form.location.data,
+            location_id=form.location.data,
             organisation_id=organisation_id,
         )
         flash(
@@ -71,7 +74,9 @@ def create(organisation_id):
             "success",
         )
         return redirect(url_for("person.list", organisation_id=organisation_id))
-
+    elif request.method == "GET":
+        form.email_address.data = f"@{organisation['domain']}"
+    
     return render_template(
         "create_person.html",
         title="Create a new person",
@@ -103,9 +108,11 @@ def edit(organisation_id, person_id):
     """Edit a specific Person in an Person."""
     person = Person().get(organisation_id=organisation_id, person_id=person_id)
     roles = Role().list(organisation_id=organisation_id)
+    locations = Location().list(organisation_id=organisation_id)
+    
     form = PersonForm()
-    if roles:
-        form.role.choices = [(role["id"], role["title"]) for role in roles]
+    form.role.choices = [(role["id"], role["title"]) for role in roles if roles]
+    form.location.choices = [(location["id"], location["name"]) for location in locations if locations]
 
     if form.validate_on_submit():
         changed_person = Person().edit(
@@ -115,7 +122,7 @@ def edit(organisation_id, person_id):
             role_id=form.role.data,
             employment=form.employment.data,
             full_time_equivalent=form.full_time_equivalent.data,
-            location=form.location.data,
+            location_id=form.location.data,
             organisation_id=organisation_id,
         )
         flash(
@@ -136,11 +143,11 @@ def edit(organisation_id, person_id):
         form.role.data = person["role"]["id"]
         form.employment.data = person["employment"]
         form.full_time_equivalent.data = person["full_time_equivalent"]
-        form.location.data = person["location"]
+        form.location.data = person["location"]["id"]
 
     return render_template(
         "edit_person.html",
-        title="Edit {}".format(person["name"]),
+        title=f"Edit {person['name']}",
         form=form,
         person=person,
     )
@@ -158,7 +165,7 @@ def delete(organisation_id, person_id):
     if request.method == "GET":
         return render_template(
             "delete_person.html",
-            title="Delete {}".format(person["name"]),
+            title=f"Delete {person['name']}",
             person=person,
         )
     elif request.method == "POST":
