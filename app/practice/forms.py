@@ -14,3 +14,7 @@ class PracticeForm(FlaskForm):
         validators=[Optional()],
         choices=[("", "None")],
     )
+    cost_centre = StringField(
+        "Cost centre",
+        validators=[Optional()],
+    )

@@ -43,7 +43,12 @@ def create(organisation_id):
         form.head.choices += [(person["id"], person["name"]) for person in people]
 
     if form.validate_on_submit():
-        new_practice = Practice().create(organisation_id=organisation_id, name=form.name.data, head_id=form.head.data)
+        new_practice = Practice().create(
+            organisation_id=organisation_id,
+            name=form.name.data,
+            head_id=form.head.data,
+            cost_centre=form.cost_centre.data,
+        )
         flash(
             "<a href='{}' class='alert-link'>{}</a> has been created.".format(
                 url_for(
@@ -98,6 +103,7 @@ def edit(organisation_id, practice_id):
             practice_id=practice_id,
             name=form.name.data,
             head_id=form.head.data,
+            cost_centre=form.cost_centre.data,
         )
         flash(
             "Your changes to <a href='{}' class='alert-link'>{}</a> have been saved.".format(
@@ -115,6 +121,7 @@ def edit(organisation_id, practice_id):
         form.name.data = practice["name"]
         if practice["head"]:
             form.head.data = practice["head"]["id"]
+        form.cost_centre.data = practice["cost_centre"]
 
     return render_template(
         "edit_practice.html",
@@ -155,7 +162,7 @@ def download(organisation_id):
         w = csv.writer(data)
 
         # write header
-        w.writerow(("NAME", "HEAD"))
+        w.writerow(("NAME", "HEAD", "COST_CENTRE"))
         yield data.getvalue()
         data.seek(0)
         data.truncate(0)
@@ -166,6 +173,7 @@ def download(organisation_id):
                 (
                     practice["name"],
                     practice["head"]["name"] if practice["head"] else None,
+                    practice["cost_centre"] if practice["cost_centre"] else None,
                 )
             )
             yield data.getvalue()
