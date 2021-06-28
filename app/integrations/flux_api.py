@@ -436,6 +436,26 @@ class Project(FluxAPI):
             else:
                 raise InternalServerError
 
+    def managers(self, organisation_id):
+        """Get a list of Project managers"""
+        url = f"{self.url}/{self.version}/organisations/{organisation_id}/projects/managers"
+        headers = {"Accept": "application/json"}
+
+        try:
+            response = requests.get(url, headers=headers, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            raise RequestTimeout
+        except requests.exceptions.ConnectionError:
+            raise InternalServerError
+        else:
+            if response.status_code == 200:
+                return json.loads(response.text)
+            elif response.status_code == 204:
+                return None
+            elif response.status_code == 429:
+                raise TooManyRequests
+            else:
+                raise InternalServerError
 
 class Grade(FluxAPI):
     def create(self, name, organisation_id):
@@ -572,13 +592,15 @@ class Grade(FluxAPI):
 
 
 class Practice(FluxAPI):
-    def create(self, name, head_id, organisation_id):
+    def create(self, name, head_id, cost_centre, organisation_id):
         """Create a new Practice."""
         url = f"{self.url}/{self.version}/organisations/{organisation_id}/practices"
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
         new_practice = {"name": name}
         if head_id:
             new_practice["head_id"] = head_id
+        if cost_centre:
+            new_practice["cost_centre"] = cost_centre
 
         try:
             response = requests.post(
@@ -654,13 +676,15 @@ class Practice(FluxAPI):
             else:
                 raise InternalServerError
 
-    def edit(self, practice_id, name, head_id, organisation_id):
+    def edit(self, practice_id, name, head_id, cost_centre, organisation_id):
         """Edit a Practice with a specific ID."""
         url = f"{self.url}/{self.version}/organisations/{organisation_id}/practices/{practice_id}"
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
         changed_practice = {"name": name}
         if head_id:
             changed_practice["head_id"] = head_id
+        if cost_centre:
+            changed_practice["cost_centre"] = cost_centre
 
         try:
             response = requests.put(
