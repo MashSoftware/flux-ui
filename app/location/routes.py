@@ -105,7 +105,7 @@ def edit(organisation_id, location_id):
         form.address.data = location["address"]
 
     return render_template(
-        "update_location.html",
+        "edit_location.html",
         title=f"Edit {location['name']}",
         form=form,
         location=location,
