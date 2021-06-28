@@ -332,6 +332,7 @@ class Project(FluxAPI):
         if kwargs:
             args = {
                 "name": kwargs.get("name", ""),
+                "manager_id": kwargs.get("manager_id", ""),
                 "programme_id": kwargs.get("programme_id", ""),
                 "status": kwargs.get("status", ""),
             }
