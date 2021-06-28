@@ -1,0 +1,51 @@
+<form action="" method="post" novalidate>
+    {{ form.csrf_token }}
+    <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {% if form.errors %}
+            {% if form.title.errors %}
+                {{ form.title(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="titleHelp titleError") }}
+                {% for error in form.title.errors %}<div class="invalid-feedback" id="titleError">{{error}}</div>{% endfor %}
+            {% else %}
+                {{ form.title(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="titleHelp titleValid") }}
+                <div class="valid-feedback" id="titleValid">Looks good!</div>
+            {% endif %}
+        {% else %}
+            {{ form.title(class="form-control", type="text", spellcheck="true", aria_describedby="titleHelp") }}
+        {% endif %}
+        <div id="titleHelp" class="form-text">{{ form.title.description }}</div>
+    </div>
+    <div class="mb-3">
+        {{ form.grade.label(class="form-label") }}
+        {% if form.errors %}
+            {% if form.grade.errors %}
+                {{ form.grade(class="form-select is-invalid", aria_describedby="gradeHelp gradeError") }}
+                {% for error in form.grade.errors %}<div class="invalid-feedback" id="gradeError">{{ error }}</div>{% endfor %}
+            {% else %}
+                {{ form.grade(class="form-select is-valid", aria_describedby="gradeHelp gradeError") }}
+                <div class="valid-feedback" id="gradeValid">Looks good!</div>
+            {% endif %}
+        {% else %}
+            {{ form.grade(class="form-select") }}
+        {% endif %}
+        <div id=gradeHelp class="form-text">{{ form.grade.description }}</div>
+    </div>
+    <div class="mb-3">
+        {{ form.practice.label(class="form-label") }}
+        {% if form.errors %}
+            {% if form.practice.errors %}
+                {{ form.practice(class="form-select is-invalid", aria_describedby="practiceHelp practiceError") }}
+                {% for error in form.practice.errors %}<div class="invalid-feedback" id="practiceError">{{ error }}</div>{% endfor %}
+            {% else %}
+                {{ form.practice(class="form-select is-valid", aria_describedby="practiceHelp practiceError") }}
+                <div class="valid-feedback" id="practiceValid">Looks good!</div>
+            {% endif %}
+        {% else %}
+            {{ form.practice(class="form-select") }}
+        {% endif %}
+        <div id=practiceHelp class="form-text">{{ form.practice.description }}</div>
+    </div>
+    <div class="d-grid gap-2 d-sm-block">
+        <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Save</button>
+    </div>
+</form>

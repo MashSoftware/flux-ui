@@ -15,22 +15,7 @@
         <h1>{{title}}</h1>
         <hr>
         <p class="lead">Are you sure you want to delete {{ practice.name }}?</p>
-        <dl class="row">
-            <dt class="col-sm-3">Head of practice</dt>
-            <dd class="col-sm-9">
-            {% if practice.head %}
-                <a href="{{ url_for('person.view', organisation_id=practice.organisation.id, person_id=practice.head.id) }}">{{ practice.head.name }}</a></dd>
-            {% else %}
-                None
-            {% endif %}
-            </dd>
-
-            <dt class="col-sm-3">Created</dt>
-            <dd class="col-sm-9">{{ practice.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
-
-            <dt class="col-sm-3">Last updated</dt>
-            <dd class="col-sm-9">{{ practice.updated_at.strftime("%d/%m/%Y %H:%M:%S") if practice.updated_at else "Never" }}</dd>
-        </dl>
+        {% include '_practice_description.html' %}
         <form action="" method="post" novalidate>
             <div class="d-grid gap-2 d-sm-block">
                 <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i> Yes, delete {{ practice.name }}</button>

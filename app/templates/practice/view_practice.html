@@ -13,22 +13,7 @@
         <p class="h4 text-muted mb-0">Practice</p>
         <h1>{{ title }}</h1>
         <hr>
-        <dl class="row">
-            <dt class="col-sm-3">Head of practice</dt>
-            <dd class="col-sm-9">
-            {% if practice.head %}
-                <a href="{{ url_for('person.view', organisation_id=practice.organisation.id, person_id=practice.head.id) }}">{{ practice.head.name }}</a></dd>
-            {% else %}
-                None
-            {% endif %}
-            </dd>
-
-            <dt class="col-sm-3">Created</dt>
-            <dd class="col-sm-9">{{ practice.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
-
-            <dt class="col-sm-3">Last updated</dt>
-            <dd class="col-sm-9">{{ practice.updated_at.strftime("%d/%m/%Y %H:%M:%S") if practice.updated_at else "Never" }}</dd>
-        </dl>
+        {% include '_practice_description.html' %}
         <div class="d-grid gap-2 d-sm-block">
             <a class="btn btn-primary" href="{{ url_for('role.list', organisation_id=practice.organisation.id, practice_id=practice.id) }}">View Roles <span class="badge bg-secondary">{{ practice.roles }}</span></a>
             <a class="btn btn-secondary" href="{{ url_for('practice.edit', organisation_id=practice.organisation.id, practice_id=practice.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>

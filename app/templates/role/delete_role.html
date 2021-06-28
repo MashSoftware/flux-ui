@@ -14,19 +14,7 @@
         <h1>{{title}}</h1>
         <hr>
         <p class="lead">Are you sure you want to delete {{ role.title }}?</p>
-        <dl class="row">
-            <dt class="col-sm-3">Grade</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('grade.view', organisation_id=role.organisation.id, grade_id=role.grade.id) }}">{{ role.grade.name }}</a></dd>
-            
-            <dt class="col-sm-3">Practice</dt>
-            <dd class="col-sm-9">{% if role.practice %}<a href="{{ url_for('practice.view', organisation_id=role.organisation.id, practice_id=role.practice.id) }}">{{ role.practice.name }}</a>{% else %}None{% endif %}</dd>
-
-            <dt class="col-sm-3">Created</dt>
-            <dd class="col-sm-9">{{ role.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
-
-            <dt class="col-sm-3">Last updated</dt>
-            <dd class="col-sm-9">{{ role.updated_at.strftime("%d/%m/%Y %H:%M:%S") if role.updated_at else "Never" }}</dd>
-        </dl>
+        {% include '_role_description.html' %}
         <form action="" method="post" novalidate>
             <div class="d-grid gap-2 d-sm-block">
                 <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i> Yes, delete {{ role.title }}</button>

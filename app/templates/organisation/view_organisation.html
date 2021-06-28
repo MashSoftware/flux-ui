@@ -6,16 +6,7 @@
         <p class="h4 text-muted mb-0">Organisation</p>
         <h1>{{ title }}</h1>
         <hr>
-        <dl class="row">
-            <dt class="col-sm-3">Domain</dt>
-            <dd class="col-sm-9">{{ organisation.domain }}</dd>
-
-            <dt class="col-sm-3">Created</dt>
-            <dd class="col-sm-9">{{ organisation.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
-
-            <dt class="col-sm-3">Last updated</dt>
-            <dd class="col-sm-9">{{ organisation.updated_at.strftime("%d/%m/%Y %H:%M:%S") if organisation.updated_at else "Never" }}</dd>
-        </dl>
+        {% include '_organisation_description.html' %}
         <div class="d-grid gap-2 d-sm-block mb-3">
             <a class="btn btn-secondary" href="{{ url_for('organisation.edit', organisation_id=organisation.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>
             <a class="btn btn-danger" href="{{ url_for('organisation.delete', organisation_id=organisation.id) }}"><i class="bi bi-trash"></i> Delete</a>

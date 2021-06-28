@@ -13,19 +13,7 @@
         <p class="h4 text-muted mb-0">Role</p>
         <h1>{{ title }}</h1>
         <hr>
-        <dl class="row">
-            <dt class="col-sm-3">Grade</dt>
-            <dd class="col-sm-9"><a href="{{ url_for('grade.view', organisation_id=role.organisation.id, grade_id=role.grade.id) }}">{{ role.grade.name }}</a></dd>
-            
-            <dt class="col-sm-3">Practice</dt>
-            <dd class="col-sm-9">{% if role.practice %}<a href="{{ url_for('practice.view', organisation_id=role.organisation.id, practice_id=role.practice.id) }}">{{ role.practice.name }}</a>{% else %}None{% endif %}</dd>
-            
-            <dt class="col-sm-3">Created</dt>
-            <dd class="col-sm-9">{{ role.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
-
-            <dt class="col-sm-3">Last updated</dt>
-            <dd class="col-sm-9">{{ role.updated_at.strftime("%d/%m/%Y %H:%M:%S") if role.updated_at else "Never" }}</dd>
-        </dl>
+        {% include '_role_description.html' %}
         <div class="d-grid gap-2 d-sm-block">
             <a class="btn btn-primary" href="{{ url_for('person.list', organisation_id=role.organisation.id, role_id=role.id) }}">View People <span class="badge bg-secondary">{{ role.people }}</span></a>
             <a class="btn btn-secondary" href="{{ url_for('role.edit', organisation_id=role.organisation.id, role_id=role.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>

@@ -1,0 +1,7 @@
+<dl class="row">
+    <dt class="col-sm-3">Created</dt>
+    <dd class="col-sm-9">{{ grade.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+    <dt class="col-sm-3">Last updated</dt>
+    <dd class="col-sm-9">{{ grade.updated_at.strftime("%d/%m/%Y %H:%M:%S") if grade.updated_at else "Never" }}</dd>
+</dl>

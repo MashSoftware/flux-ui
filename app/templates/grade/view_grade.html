@@ -13,13 +13,7 @@
         <p class="h4 text-muted mb-0">Grade</p>
         <h1>{{ title }}</h1>
         <hr>
-        <dl class="row">
-            <dt class="col-sm-3">Created</dt>
-            <dd class="col-sm-9">{{ grade.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
-
-            <dt class="col-sm-3">Last updated</dt>
-            <dd class="col-sm-9">{{ grade.updated_at.strftime("%d/%m/%Y %H:%M:%S") if grade.updated_at else "Never" }}</dd>
-        </dl>
+        {% include '_grade_description.html' %}
         <div class="d-grid gap-2 d-sm-block">
             <a class="btn btn-primary" href="{{ url_for('role.list', organisation_id=grade.organisation.id, grade_id=grade.id) }}">View Roles <span class="badge bg-secondary">{{ grade.roles }}</span></a>
             <a class="btn btn-secondary" href="{{ url_for('grade.edit', organisation_id=grade.organisation.id, grade_id=grade.id) }}"><i class="bi bi-pencil-square"></i> Edit</a>

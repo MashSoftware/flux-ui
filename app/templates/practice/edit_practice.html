@@ -14,41 +14,7 @@
         <p class="h4 text-muted mb-0">Practice</p>
         <h1>{{title}}</h1>
         <hr>
-        <form action="" method="post" novalidate>
-            {{ form.csrf_token }}
-            <div class="mb-3">
-                {{ form.name.label(class="form-label") }}
-                {% if form.errors %}
-                    {% if form.name.errors %}
-                        {{ form.name(class="form-control is-invalid", type="text", spellcheck="true", aria_describedby="nameHelp nameError") }}
-                        {% for error in form.name.errors %}<div class="invalid-feedback" id="nameError">{{error}}</div>{% endfor %}
-                    {% else %}
-                        {{ form.name(class="form-control is-valid", type="text", spellcheck="true", aria_describedby="nameHelp nameValid") }}
-                        <div class="valid-feedback" id="nameValid">Looks good!</div>
-                    {% endif %}
-                {% else %}
-                    {{ form.name(class="form-control", type="text", spellcheck="true", aria_describedby="nameHelp") }}
-                {% endif %}
-                <div id="nameHelp" class="form-text">{{ form.name.description }}</div>
-            </div>
-            <div class="mb-3">
-                {{ form.head.label(class="form-label") }}
-                {% if form.errors %}
-                    {% if form.head.errors %}
-                        {{ form.head(class="form-select is-invalid", aria_describedby="headHelp headError") }}
-                        {% for error in form.head.errors %}<div class="invalid-feedback" id="headError">{{ error }}</div>{% endfor %}
-                    {% else %}
-                        {{ form.head(class="form-select is-valid", aria_describedby="headHelp headError") }}
-                        <div class="valid-feedback" id="headValid">Looks good!</div>
-                    {% endif %}
-                {% else %}
-                    {{ form.head(class="form-select") }}
-                {% endif %}
-            </div>
-            <div class="d-grid gap-2 d-sm-block">
-                <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Save</button>
-            </div>
-        </form>
+        {% include '_practice_form.html' %}
     </div>
 </div>
 {% endblock %}

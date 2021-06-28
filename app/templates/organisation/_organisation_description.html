@@ -1,0 +1,10 @@
+<dl class="row">
+    <dt class="col-sm-3">Domain</dt>
+    <dd class="col-sm-9">{{ organisation.domain }}</dd>
+
+    <dt class="col-sm-3">Created</dt>
+    <dd class="col-sm-9">{{ organisation.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+    <dt class="col-sm-3">Last updated</dt>
+    <dd class="col-sm-9">{{ organisation.updated_at.strftime("%d/%m/%Y %H:%M:%S") if organisation.updated_at else "Never" }}</dd>
+</dl>

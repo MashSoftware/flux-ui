@@ -1,0 +1,10 @@
+<dl class="row">
+    <dt class="col-sm-3">Address</dt>
+    <dd class="col-sm-9">{{ location.address }}</dd>
+
+    <dt class="col-sm-3">Created</dt>
+    <dd class="col-sm-9">{{ location.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+    <dt class="col-sm-3">Last updated</dt>
+    <dd class="col-sm-9">{{ location.updated_at.strftime("%d/%m/%Y %H:%M:%S") if location.updated_at else "Never" }}</dd>
+</dl>

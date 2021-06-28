@@ -15,13 +15,7 @@
         <h1>{{title}}</h1>
         <hr>
         <p class="lead">Are you sure you want to delete {{ grade.name }}?</p>
-        <dl class="row">
-            <dt class="col-sm-3">Created</dt>
-            <dd class="col-sm-9">{{ grade.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
-
-            <dt class="col-sm-3">Last updated</dt>
-            <dd class="col-sm-9">{{ grade.updated_at.strftime("%d/%m/%Y %H:%M:%S") if grade.updated_at else "Never" }}</dd>
-        </dl>
+        {% include '_grade_description.html' %}
         <form action="" method="post" novalidate>
             <div class="d-grid gap-2 d-sm-block">
                 <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i> Yes, delete {{ grade.name }}</button>

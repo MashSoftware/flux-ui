@@ -7,20 +7,14 @@
                 <li class="breadcrumb-item"><a href="{{ url_for('organisation.view', organisation_id=location.organisation.id) }}">{{ location.organisation.name }}</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('location.list', organisation_id=location.organisation.id) }}">Locations</a></li>
                 <li class="breadcrumb-item"><a href="{{ url_for('location.view', organisation_id=location.organisation.id, location_id=location.id) }}">{{ location.name }}</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Delete</li>
+                <li class="breadcrumb-item active" aria-current="page">Edit</li>
             </ol>
         </nav>
         {{ super() }}
         <p class="h4 text-muted mb-0">Location</p>
         <h1>{{title}}</h1>
         <hr>
-        <p class="lead">Are you sure you want to delete {{ location.name }}?</p>
-        {% include '_location_description.html' %}
-        <form action="" method="post" novalidate>
-            <div class="d-grid gap-2 d-sm-block">
-                <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i> Yes, delete {{ location.name }}</button>
-            </div>
-        </form>
+        {% include '_location_form.html' %}
     </div>
 </div>
 {% endblock %}
