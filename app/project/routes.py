@@ -4,20 +4,35 @@ from io import StringIO
 from app import csrf
 from app.integrations.flux_api import Organisation, Person, Programme, Project
 from app.project import project
-from app.project.forms import ProjectForm
+from app.project.forms import ProjectFilterForm, ProjectForm
 from flask import Response, flash, redirect, render_template, request, url_for
 
 
 @project.route("/<uuid:organisation_id>/projects/", methods=["GET", "POST"])
+@csrf.exempt
 def list(organisation_id):
     """Get a list of Projects in an Organisation."""
     name_query = request.args.get("name", type=str)
-    programme_filter = request.args.get("programme_id", type=str)
+    manager_filter = request.args.get("manager", type=str)
+    programme_filter = request.args.get("programme", type=str)
     status_filter = request.args.get("status", type=str)
     organisation = Organisation().get(organisation_id=organisation_id)
 
+    managers = Project().managers(organisation_id=organisation_id)
+    programmes = Programme().list(organisation_id=organisation_id)
+    
+    form = ProjectFilterForm()
+    form.name.data = name_query
+    form.manager.choices += [(manager["id"], manager["name"]) for manager in managers]
+    form.manager.data = manager_filter if manager_filter else ""
+    form.programme.choices += [(programme["id"], programme["name"]) for programme in programmes]
+    form.programme.data = programme_filter if programme_filter else ""
+    form.status.data = status_filter if status_filter else ""
+
     if name_query:
         projects = Project().list(organisation_id=organisation_id, name=name_query)
+    elif manager_filter:
+        projects = Project().list(organisation_id=organisation_id, manager_id=manager_filter)
     elif programme_filter:
         projects = Project().list(organisation_id=organisation_id, programme_id=programme_filter)
     elif status_filter:
@@ -30,6 +45,7 @@ def list(organisation_id):
         title="Projects",
         organisation=organisation,
         projects=projects,
+        form=form,
     )
 
 

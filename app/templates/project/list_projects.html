@@ -14,24 +14,61 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6 mb-3">
-        <div class="d-grid gap-2 d-sm-block">
+    <div class="col">
+        <div class="d-grid gap-2 d-sm-block mb-3">
             <a class="btn btn-primary" href="{{ url_for('project.create', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New project</a>
             <a class="btn btn-secondary" href="{{ url_for('project.download', organisation_id=organisation.id) }}"><i class="bi bi-download"></i> Download</a>
         </div>
     </div>
-    <div class="col-md-6">
-        <form action="" method="get" novalidate>
-            <div class="input-group mb-3">
-                <input type="search" name="name" value="{{ request.args.name }}" class="form-control" aria-label="Search" aria-describedby="button-addon">
-                <button class="btn btn-primary" type="submit" id="button-addon" aria-label="Search"><i class="bi bi-search"></i></button>
-            </div>
-        </form>
-    </div>
 </div>
 <div class="row">
-    <div class="col">
-        <p class="lead">{{ projects|length if projects else 0 }} projects{% if request.args.name %} containing "{{ request.args.name }}"{% endif %}</p>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">Filters</div>
+            <form action="" method="get" novalidate>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        {{ form.name.label(class="form-label") }}
+                        {{ form.name(class="form-control mb-3", type="text") }}
+                    </li>
+                    <li class="list-group-item">
+                        {{ form.manager.label(class="form-label") }}
+                        {% for subfield in form.manager %}
+                            <div class="form-check">
+                                {{ subfield(class="form-check-input", type="radio") }}
+                                {{ subfield.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </li>
+                    <li class="list-group-item">
+                        {{ form.programme.label(class="form-label") }}
+                        {% for subfield in form.programme %}
+                            <div class="form-check">
+                                {{ subfield(class="form-check-input", type="radio") }}
+                                {{ subfield.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </li>
+                    <li class="list-group-item">
+                        {{ form.status.label(class="form-label") }}
+                        {% for subfield in form.status %}
+                            <div class="form-check">
+                                {{ subfield(class="form-check-input", type="radio") }}
+                                {{ subfield.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Apply filters</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <p class="lead">{% if projects %}{{ projects|length }} {% if projects|length == 1%}project{% else %}projects{% endif %}{% else %}0 projects{% endif %}</p>
         {% if projects %}
             <div class="table-responsive">
                 <table class="table">
@@ -41,7 +78,7 @@
                             <th scope="col">Project manager</th>
                             <th scope="col">Programme</th>
                             <th scope="col">Status</th>
-                            <th scope="col" class="text-end">Actions</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +88,7 @@
                                 <td>{% if project.manager %}<a href="{{ url_for('person.view', organisation_id=organisation.id, person_id=project.manager.id) }}">{{ project.manager.name }}</a>{% else %}None{% endif %}</td>
                                 <td>{% if project.programme %}<a href="{{ url_for('programme.view', organisation_id=organisation.id, programme_id=project.programme.id) }}">{{ project.programme.name }}</a>{% else %}None{% endif %}</th>
                                 <td><span class="badge {% if project.status=='active'%}bg-success{% elif project.status=='paused'%}bg-warning text-dark{% elif project.status=='closed'%}bg-danger{% endif %}">{{ project.status | upper }}</span></td>
-                                <td class="text-end"><a href="{{ url_for('project.edit', organisation_id=organisation.id, project_id=project.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('project.delete', organisation_id=organisation.id, project_id=project.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
+                                <td><a href="{{ url_for('project.edit', organisation_id=organisation.id, project_id=project.id) }}"><i class="bi bi-pencil-square"></i> Edit</a><br><a href="{{ url_for('project.delete', organisation_id=organisation.id, project_id=project.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
                             </tr>
                         {% endfor %}
                     </tbody>

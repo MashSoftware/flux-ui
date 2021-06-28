@@ -26,3 +26,18 @@ class ProjectForm(FlaskForm):
         description="The current status of the project",
         choices=[("active", "Active"), ("paused", "Paused"), ("closed", "Closed")],
     )
+
+
+class ProjectFilterForm(FlaskForm):
+    name = StringField("Name", validators=[Optional()])
+    manager = RadioField("Project manager", choices=[("", "All")])
+    programme = RadioField("Programme", choices=[("", "All")])
+    status = RadioField(
+        "Status",
+        choices=[
+            ("", "All"),
+            ("active", "Active"),
+            ("paused", "Paused"),
+            ("closed", "Closed"),
+        ],
+    )
