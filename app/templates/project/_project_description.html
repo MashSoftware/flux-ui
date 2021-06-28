@@ -1,0 +1,16 @@
+<dl class="row">
+    <dt class="col-sm-3">Project manager</dt>
+    <dd class="col-sm-9">{% if project.manager %}<a href="{{ url_for('person.view', organisation_id=project.organisation.id, person_id=project.manager.id) }}">{{ project.manager.name }}</a>{% else %}None{% endif %}</dd>
+    
+    <dt class="col-sm-3">Programme</dt>
+    <dd class="col-sm-9">{% if project.programme %}<a href="{{ url_for('programme.view', organisation_id=project.organisation.id, programme_id=project.programme.id) }}">{{ project.programme.name }}</a>{% else %}None{% endif %}</dd>
+
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9"><span class="badge {% if project.status=='active'%}bg-success{% elif project.status=='paused'%}bg-warning text-dark{% elif project.status=='closed'%}bg-danger{% endif %}">{{ project.status | upper }}</span></dd>
+
+    <dt class="col-sm-3">Created</dt>
+    <dd class="col-sm-9">{{ project.created_at.strftime("%d/%m/%Y %H:%M:%S") }}</dd>
+
+    <dt class="col-sm-3">Last updated</dt>
+    <dd class="col-sm-9">{{ project.updated_at.strftime("%d/%m/%Y %H:%M:%S") if project.updated_at else "Never" }}</dd>
+</dl>
