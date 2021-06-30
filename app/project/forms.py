@@ -4,11 +4,7 @@ from wtforms.validators import InputRequired, Optional
 
 
 class ProjectForm(FlaskForm):
-    name = StringField(
-        "Name",
-        validators=[InputRequired(message="Enter a name")],
-        description="The name of the project",
-    )
+    name = StringField("Name", validators=[InputRequired(message="Enter a name")])
     manager = SelectField(
         "Project manager",
         validators=[Optional()],
@@ -17,21 +13,19 @@ class ProjectForm(FlaskForm):
     programme = SelectField(
         "Programme",
         validators=[Optional()],
-        description="The programme to which this project belongs",
         choices=[("", "None")],
     )
     status = RadioField(
         "Status",
         validators=[InputRequired(message="Select a status")],
-        description="The current status of the project",
         choices=[("active", "Active"), ("paused", "Paused"), ("closed", "Closed")],
     )
 
 
 class ProjectFilterForm(FlaskForm):
     name = StringField("Name", validators=[Optional()])
-    manager = RadioField("Project manager", choices=[("", "All")])
-    programme = RadioField("Programme", choices=[("", "All")])
+    manager = RadioField("Project manager", choices=[("", "All")], default="")
+    programme = RadioField("Programme", choices=[("", "All")], default="")
     status = RadioField(
         "Status",
         choices=[
@@ -40,4 +34,5 @@ class ProjectFilterForm(FlaskForm):
             ("paused", "Paused"),
             ("closed", "Closed"),
         ],
+        default="",
     )
