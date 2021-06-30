@@ -327,15 +327,9 @@ class Project(FluxAPI):
             else:
                 raise InternalServerError
 
-    def list(self, organisation_id, **kwargs):
+    def list(self, organisation_id, args):
         """Get a list of Projects."""
-        if kwargs:
-            args = {
-                "name": kwargs.get("name", ""),
-                "manager_id": kwargs.get("manager_id", ""),
-                "programme_id": kwargs.get("programme_id", ""),
-                "status": kwargs.get("status", ""),
-            }
+        if args:
             qs = urlencode(args)
             url = f"{self.url}/{self.version}/organisations/{organisation_id}/projects?{qs}"
         else:
@@ -457,6 +451,7 @@ class Project(FluxAPI):
                 raise TooManyRequests
             else:
                 raise InternalServerError
+
 
 class Grade(FluxAPI):
     def create(self, name, organisation_id):

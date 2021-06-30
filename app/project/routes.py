@@ -12,33 +12,32 @@ from flask import Response, flash, redirect, render_template, request, url_for
 @csrf.exempt
 def list(organisation_id):
     """Get a list of Projects in an Organisation."""
-    name_query = request.args.get("name", type=str)
-    manager_filter = request.args.get("manager", type=str)
-    programme_filter = request.args.get("programme", type=str)
-    status_filter = request.args.get("status", type=str)
     organisation = Organisation().get(organisation_id=organisation_id)
-
     managers = Project().managers(organisation_id=organisation_id)
     programmes = Programme().list(organisation_id=organisation_id)
-    
-    form = ProjectFilterForm()
-    form.name.data = name_query
-    form.manager.choices += [(manager["id"], manager["name"]) for manager in managers]
-    form.manager.data = manager_filter if manager_filter else ""
-    form.programme.choices += [(programme["id"], programme["name"]) for programme in programmes]
-    form.programme.data = programme_filter if programme_filter else ""
-    form.status.data = status_filter if status_filter else ""
 
-    if name_query:
-        projects = Project().list(organisation_id=organisation_id, name=name_query)
-    elif manager_filter:
-        projects = Project().list(organisation_id=organisation_id, manager_id=manager_filter)
-    elif programme_filter:
-        projects = Project().list(organisation_id=organisation_id, programme_id=programme_filter)
-    elif status_filter:
-        projects = Project().list(organisation_id=organisation_id, status=status_filter)
-    else:
-        projects = Project().list(organisation_id=organisation_id)
+    form = ProjectFilterForm()
+    form.manager.choices += [(manager["id"], manager["name"]) for manager in managers]
+    form.programme.choices += [(programme["id"], programme["name"]) for programme in programmes]
+
+    args = {}
+    if request.args.get("name"):
+        args["name"] = request.args.get("name", type=str)
+        form.name.data = args["name"]
+
+    if request.args.get("manager"):
+        args["manager_id"] = request.args.get("manager", type=str)
+        form.manager.data = args["manager_id"]
+
+    if request.args.get("programme"):
+        args["programme_id"] = request.args.get("programme", type=str)
+        form.programme.data = args["programme_id"]
+
+    if request.args.get("status"):
+        args["status"] = request.args.get("status", type=str)
+        form.status.data = args["status"]
+
+    projects = Project().list(organisation_id=organisation_id, args=args)
 
     return render_template(
         "list_projects.html",
@@ -142,6 +141,8 @@ def edit(organisation_id, project_id):
         form.name.data = project["name"]
         if project["manager"]:
             form.manager.data = project["manager"]["id"]
+        if project["programme"]:
+            form.programme.data = project["programme"]["id"]
         form.status.data = project["status"]
 
     return render_template(
