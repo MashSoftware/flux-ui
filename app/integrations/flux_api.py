@@ -327,10 +327,10 @@ class Project(FluxAPI):
             else:
                 raise InternalServerError
 
-    def list(self, organisation_id, args):
+    def list(self, organisation_id, filters):
         """Get a list of Projects."""
-        if args:
-            qs = urlencode(args)
+        if filters:
+            qs = urlencode(filters)
             url = f"{self.url}/{self.version}/organisations/{organisation_id}/projects?{qs}"
         else:
             url = f"{self.url}/{self.version}/organisations/{organisation_id}/projects"
