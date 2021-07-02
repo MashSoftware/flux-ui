@@ -24,10 +24,11 @@ class ProjectForm(FlaskForm):
 
 class ProjectFilterForm(FlaskForm):
     name = StringField("Name", validators=[Optional()])
-    manager = RadioField("Project manager", choices=[("", "All")], default="")
-    programme = RadioField("Programme", choices=[("", "All")], default="")
+    manager = RadioField("Project manager", validators=[Optional()], choices=[("", "All")], default="")
+    programme = RadioField("Programme", validators=[Optional()], choices=[("", "All")], default="")
     status = RadioField(
         "Status",
+        validators=[Optional()],
         choices=[
             ("", "All"),
             ("active", "Active"),
