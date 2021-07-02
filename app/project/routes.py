@@ -20,24 +20,24 @@ def list(organisation_id):
     form.manager.choices += [(manager["id"], manager["name"]) for manager in managers]
     form.programme.choices += [(programme["id"], programme["name"]) for programme in programmes]
 
-    args = {}
+    filters = {}
     if request.args.get("name"):
-        args["name"] = request.args.get("name", type=str)
-        form.name.data = args["name"]
+        filters["name"] = request.args.get("name", type=str)
+        form.name.data = filters["name"]
 
     if request.args.get("manager"):
-        args["manager_id"] = request.args.get("manager", type=str)
-        form.manager.data = args["manager_id"]
+        filters["manager_id"] = request.args.get("manager", type=str)
+        form.manager.data = filters["manager_id"]
 
     if request.args.get("programme"):
-        args["programme_id"] = request.args.get("programme", type=str)
-        form.programme.data = args["programme_id"]
+        filters["programme_id"] = request.args.get("programme", type=str)
+        form.programme.data = filters["programme_id"]
 
     if request.args.get("status"):
-        args["status"] = request.args.get("status", type=str)
-        form.status.data = args["status"]
+        filters["status"] = request.args.get("status", type=str)
+        form.status.data = filters["status"]
 
-    projects = Project().list(organisation_id=organisation_id, args=args)
+    projects = Project().list(organisation_id=organisation_id, filters=filters)
 
     return render_template(
         "list_projects.html",
