@@ -761,15 +761,10 @@ class Role(FluxAPI):
             else:
                 raise InternalServerError
 
-    def list(self, organisation_id, **kwargs):
+    def list(self, organisation_id, filters):
         """Get a list of Roles."""
-        if kwargs:
-            args = {
-                "title": kwargs.get("title", ""),
-                "grade_id": kwargs.get("grade_id", ""),
-                "practice_id": kwargs.get("practice_id", ""),
-            }
-            qs = urlencode(args)
+        if filters:
+            qs = urlencode(filters)
             url = f"{self.url}/{self.version}/organisations/{organisation_id}/roles?{qs}"
         else:
             url = f"{self.url}/{self.version}/organisations/{organisation_id}/roles"

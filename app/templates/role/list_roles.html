@@ -14,47 +14,75 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6 mb-3">
-        <div class="d-grid gap-2 d-sm-block">
+    <div class="col">
+        <div class="d-grid gap-2 d-sm-block mb-3">
             <a class="btn btn-primary" href="{{ url_for('role.create', organisation_id=organisation.id) }}"><i class="bi bi-plus-lg"></i> New role</a>
             <a class="btn btn-secondary" href="{{ url_for('role.download', organisation_id=organisation.id) }}"><i class="bi bi-download"></i> Download</a>
         </div>
     </div>
-    <div class="col-md-6">
-        <form action="" method="get" novalidate>
-            <div class="input-group mb-3">
-                <input type="search" name="title" value="{{ request.args.title }}" class="form-control" aria-label="Search" aria-describedby="button-addon">
-                <button class="btn btn-primary" type="submit" id="button-addon" aria-label="Search"><i class="bi bi-search"></i></button>
-            </div>
-        </form>
-    </div>
 </div>
 <div class="row">
-    <div class="col">
-        <p class="lead">{{ roles|length if roles else 0 }} roles{% if request.args.title %} containing "{{ request.args.title }}"{% endif %}</p>
-        {% if roles %}
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Title</th>
-                            <th scope="col">Grade</th>
-                            <th scope="col">Practice</th>
-                            <th scope="col" class="text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for role in roles %}
-                            <tr>
-                                <th scope="row"><a href="{{ url_for('role.view', organisation_id=organisation.id, role_id=role.id) }}">{{ role.title }}</a></th>
-                                <td><a href="{{ url_for('grade.view', organisation_id=organisation.id, grade_id=role.grade.id) }}">{{ role.grade.name }}</a></td>
-                                <td>{% if role.practice %}<a href="{{ url_for('practice.view', organisation_id=organisation.id, practice_id=role.practice.id) }}">{{ role.practice.name }}</a>{% else %}None{% endif %}</td>
-                                <td class="text-end"><a href="{{ url_for('role.edit', organisation_id=organisation.id, role_id=role.id) }}"><i class="bi bi-pencil-square"></i> Edit</a> | <a href="{{ url_for('role.delete', organisation_id=organisation.id, role_id=role.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
-                            </tr>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header">Filters</div>
+            <form action="" method="get" novalidate>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        {{ form.title.label(class="form-label") }}
+                        {{ form.title(class="form-control mb-3", type="text") }}
+                    </li>
+                    <li class="list-group-item">
+                        {{ form.grade.label(class="form-label") }}
+                        {% for subfield in form.grade %}
+                            <div class="form-check">
+                                {{ subfield(class="form-check-input", type="radio") }}
+                                {{ subfield.label(class="form-check-label") }}
+                            </div>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                    </li>
+                    <li class="list-group-item">
+                        {{ form.practice.label(class="form-label") }}
+                        {% for subfield in form.practice %}
+                            <div class="form-check">
+                                {{ subfield(class="form-check-input", type="radio") }}
+                                {{ subfield.label(class="form-check-label") }}
+                            </div>
+                        {% endfor %}
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" type="submit"><i class="bi bi-funnel"></i> Apply filters</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <p class="lead">Showing {{ roles|length if roles else 0 }} of {{ organisation.roles }} roles</p>
+        {% if roles %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Grade</th>
+                        <th scope="col">Practice</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for role in roles %}
+                        <tr>
+                            <th scope="row"><a href="{{ url_for('role.view', organisation_id=organisation.id, role_id=role.id) }}">{{ role.title }}</a></th>
+                            <td><a href="{{ url_for('grade.view', organisation_id=organisation.id, grade_id=role.grade.id) }}">{{ role.grade.name }}</a></td>
+                            <td>{% if role.practice %}<a href="{{ url_for('practice.view', organisation_id=organisation.id, practice_id=role.practice.id) }}">{{ role.practice.name }}</a>{% else %}None{% endif %}</td>
+                            <td><a href="{{ url_for('role.edit', organisation_id=organisation.id, role_id=role.id) }}"><i class="bi bi-pencil-square"></i> Edit</a><br><a href="{{ url_for('role.delete', organisation_id=organisation.id, role_id=role.id) }}" class="link-danger"><i class="bi bi-trash"></i> Delete</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% endif %}
     </div>
 </div>

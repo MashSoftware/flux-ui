@@ -4,7 +4,7 @@ from io import StringIO
 from app import csrf
 from app.integrations.flux_api import Grade, Organisation, Practice, Role
 from app.role import role
-from app.role.forms import RoleForm
+from app.role.forms import RoleFilterForm, RoleForm
 from flask import Response, flash, redirect, render_template, request, url_for
 
 
@@ -14,27 +14,35 @@ from flask import Response, flash, redirect, render_template, request, url_for
 )
 def list(organisation_id):
     """Get a list of Roles."""
-    title_query = request.args.get("title", type=str)
-    grade_filter = request.args.get("grade_id", type=str)
-    practice_filter = request.args.get("practice_id", type=str)
     organisation = Organisation().get(organisation_id=organisation_id)
+    grades = Grade().list(organisation_id=organisation_id)
+    practices = Practice().list(organisation_id=organisation_id)
 
-    if title_query:
-        roles = Role().list(organisation_id=organisation_id, title=title_query)
-    elif grade_filter:
-        roles = Role().list(organisation_id=organisation_id, grade_id=grade_filter)
-    elif practice_filter:
-        roles = Role().list(organisation_id=organisation_id, practice_id=practice_filter)
-    else:
-        roles = Role().list(
-            organisation_id=organisation_id,
-        )
+    form = RoleFilterForm()
+    form.grade.choices += [(grade["id"], grade["name"]) for grade in grades]
+    form.practice.choices += [(practice["id"], practice["name"]) for practice in practices]
+
+    filters = {}
+    if request.args.get("title"):
+        filters["title"] = request.args.get("title", type=str)
+        form.title.data = filters["title"]
+
+    if request.args.get("grade"):
+        filters["grade_id"] = request.args.get("grade", type=str)
+        form.grade.data = filters["grade_id"]
+
+    if request.args.get("practice"):
+        filters["practice_id"] = request.args.get("practice", type=str)
+        form.practice.data = filters["practice_id"]
+
+    roles = Role().list(organisation_id=organisation_id, filters=filters)
 
     return render_template(
         "list_roles.html",
         title="Roles",
         organisation=organisation,
         roles=roles,
+        form=form,
     )
 
 

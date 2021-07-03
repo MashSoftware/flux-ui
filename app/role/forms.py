@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import SelectField, StringField
+from wtforms.fields import RadioField, SelectField, StringField
 from wtforms.validators import InputRequired, Optional
 
 
@@ -20,3 +20,9 @@ class RoleForm(FlaskForm):
         description="The practice to which this role belongs",
         choices=[("", "None")],
     )
+
+
+class RoleFilterForm(FlaskForm):
+    title = StringField("Title", validators=[Optional()])
+    grade = RadioField("Grade", validators=[Optional()], choices=[("", "All")], default="")
+    practice = RadioField("Practice", validators=[Optional()], choices=[("", "All")], default="")
