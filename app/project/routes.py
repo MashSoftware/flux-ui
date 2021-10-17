@@ -21,6 +21,10 @@ def list(organisation_id):
     form.programme.choices += [(programme["id"], programme["name"]) for programme in programmes]
 
     filters = {}
+    if request.args.get("sort"):
+        filters["sort"] = request.args.get("sort", type=str)
+        form.sort.data = filters["sort"]
+
     if request.args.get("name"):
         filters["name"] = request.args.get("name", type=str)
         form.name.data = filters["name"]

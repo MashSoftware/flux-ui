@@ -23,6 +23,7 @@ class ProjectForm(FlaskForm):
 
 
 class ProjectFilterForm(FlaskForm):
+    sort = SelectField("Sort by", validators=[InputRequired()], choices=[("name", "Name"), ("status", "Status")], default="name")
     name = StringField("Name", validators=[Optional()])
     manager = RadioField("Project manager", validators=[Optional()], choices=[("", "All")], default="")
     programme = RadioField("Programme", validators=[Optional()], choices=[("", "All")], default="")

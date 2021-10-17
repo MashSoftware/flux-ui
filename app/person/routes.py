@@ -46,7 +46,7 @@ def create(organisation_id):
     """Create a new Person."""
     form = PersonForm()
     organisation = Organisation().get(organisation_id=organisation_id)
-    roles = Role().list(organisation_id=organisation_id)
+    roles = Role().list(organisation_id=organisation_id, filters=None)
     form.role.choices = [(role["id"], role["title"]) for role in roles if roles]
 
     locations = Location().list(organisation_id=organisation_id)

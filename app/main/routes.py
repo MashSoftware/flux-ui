@@ -47,6 +47,9 @@ def cookies():
             form.functional.data = cookies_policy["functional"]
     return render_template("cookies.html", form=form)
 
+@main.route("/privacy", methods=["GET"])
+def privacy():
+    return render_template("privacy.html")
 
 @main.app_errorhandler(HTTPException)
 def http_exception(error):

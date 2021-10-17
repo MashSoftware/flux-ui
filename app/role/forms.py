@@ -23,6 +23,7 @@ class RoleForm(FlaskForm):
 
 
 class RoleFilterForm(FlaskForm):
+    sort = SelectField("Sort by", validators=[InputRequired()], choices=[("name", "Name"), ("status", "Status")], default="name")
     title = StringField("Title", validators=[Optional()])
     grade = RadioField("Grade", validators=[Optional()], choices=[("", "All")], default="")
     practice = RadioField("Practice", validators=[Optional()], choices=[("", "All")], default="")
